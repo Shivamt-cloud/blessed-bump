@@ -1,0 +1,184 @@
+.logo-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blessed-bump-logo {
+  transition: transform 0.3s ease;
+}
+
+.logo-aura {
+  filter: url(#softShadow);
+  animation: glow-pulse 5s ease-in-out infinite;
+}
+
+.logo-halo {
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+.bump-highlight {
+  opacity: 0.7;
+  animation: shimmer 6s ease-in-out infinite;
+}
+
+.logo-sparkles path {
+  animation: sparkle-twinkle 4s ease-in-out infinite;
+}
+
+.logo-sparkles path:nth-child(2) {
+  animation-delay: 1.2s;
+}
+
+.logo-sparkles path:nth-child(3) {
+  animation-delay: 2.3s;
+}
+
+.nav-logo:hover .blessed-bump-logo {
+  transform: scale(1.1);
+}
+
+/* Animation for the heart */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.heart {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Baby slightly bobbing inside */
+@keyframes baby-bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.baby-head,
+.baby-body {
+  animation: baby-bob 3s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.baby-smile,
+.baby-eye {
+  animation: baby-bob 3s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+/* Gentle mother breathing animation */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.bump {
+  animation: breathe 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.mother-face {
+  animation: breathe 4s ease-in-out infinite;
+  transform-origin: center;
+  animation-delay: 0.2s;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    stroke-dasharray: 40 40;
+    stroke-dashoffset: 0;
+    opacity: 0.5;
+  }
+  50% {
+    stroke-dasharray: 20 40;
+    stroke-dashoffset: -20;
+    opacity: 0.9;
+  }
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+/* Subtle arm movement */
+@keyframes arm-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+}
+
+.mother-arm-left {
+  transform-origin: 15% 25%;
+  animation: arm-sway 5s ease-in-out infinite;
+}
+
+.mother-arm-right {
+  transform-origin: 85% 25%;
+  animation: arm-sway 5s ease-in-out infinite;
+  animation-delay: -2.5s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .blessed-bump-logo {
+    width: 35px;
+    height: 35px;
+  }
+  
+  /* Reduce animation on mobile for performance */
+  .heart,
+  .baby-head,
+  .baby-body,
+  .bump-highlight,
+  .baby-smile,
+  .baby-eye,
+  .bump,
+  .mother-face,
+  .mother-arm-left,
+  .mother-arm-right,
+  .logo-aura,
+  .logo-sparkles path {
+    animation: none;
+  }
+  
+  .nav-logo:hover .blessed-bump-logo {
+    transform: none;
+  }
+}
+
