@@ -8,9 +8,11 @@ import {
   getWeekExperience,
   getWeekCareFocus,
 } from '../utils/pregnancyCalculator';
+import { useAuth } from '../context/AuthContext';
 import './Tracker.css';
 
 function Tracker() {
+  const { user, loading } = useAuth();
   const [pregnancyData, setPregnancyData] = useState(null);
   const [currentWeek, setCurrentWeek] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(null);
@@ -71,17 +73,57 @@ function Tracker() {
   const getJournalKey = (week) => `blessedbump_tracker_week_${week}`;
 
   useEffect(() => {
-    const savedData = localStorage.getItem('blessedbump_pregnancy_data');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      setPregnancyData(data);
-      if (data.dueDate) {
-        const weekData = calculateCurrentWeek(data.dueDate);
-        setCurrentWeek(weekData);
-        setSelectedWeek(weekData.weeks);
+    // Load from user profile first (Supabase), then fallback to localStorage
+    if (loading) {
+      return; // Wait for auth to finish loading
+    }
+
+    if (user?.dueDate) {
+      try {
+        // Handle both string and Date formats
+        const dueDate = user.dueDate instanceof Date 
+          ? user.dueDate 
+          : new Date(user.dueDate);
+        
+        // Validate the date
+        if (!isNaN(dueDate.getTime())) {
+          const weekData = calculateCurrentWeek(dueDate);
+          setCurrentWeek(weekData);
+          setSelectedWeek(weekData.weeks);
+          setPregnancyData({
+            dueDate: user.dueDate,
+            lmpDate: user.lmpDate,
+            conceptionDate: null, // Can be calculated if needed
+          });
+        } else {
+          console.error('Invalid due date format:', user.dueDate);
+        }
+      } catch (e) {
+        console.error('Failed to parse due date from user profile', e);
+      }
+    } else {
+      // Fallback to localStorage
+      const savedData = localStorage.getItem('blessedbump_pregnancy_data');
+      if (savedData) {
+        try {
+          const data = JSON.parse(savedData);
+          setPregnancyData(data);
+          if (data.dueDate) {
+            const dueDate = data.dueDate instanceof Date 
+              ? data.dueDate 
+              : new Date(data.dueDate);
+            if (!isNaN(dueDate.getTime())) {
+              const weekData = calculateCurrentWeek(dueDate);
+              setCurrentWeek(weekData);
+              setSelectedWeek(weekData.weeks);
+            }
+          }
+        } catch (e) {
+          console.error('Failed to parse pregnancy data from localStorage', e);
+        }
       }
     }
-  }, []);
+  }, [user, loading]);
 
   useEffect(() => {
     if (!selectedWeek) return;
@@ -107,11 +149,30 @@ function Tracker() {
     }
   }, [selectedWeek]);
 
+  if (loading) {
+    return (
+      <div className="tracker-page">
+        <div className="tracker-empty">
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👶</div>
+            <p>Loading your journey...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!pregnancyData || !currentWeek) {
     return (
       <div className="tracker-page">
         <div className="tracker-empty">
-          <p>Please set your due date first to view the tracker.</p>
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <h2>Welcome to Journey Keeper! 🧭</h2>
+            <p>To start tracking your pregnancy journey, please set your due date first.</p>
+            <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#666' }}>
+              Go to <strong>Due-Date Oracle</strong> to calculate and save your due date.
+            </p>
+          </div>
         </div>
       </div>
     );

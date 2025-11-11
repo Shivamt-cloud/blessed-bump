@@ -43,7 +43,7 @@ const toISODate = (value) => {
 };
 
 function Profile() {
-  const { user, updateUser } = useAuth();
+  const { user, profile: profileData, updateUser } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -243,35 +243,37 @@ function Profile() {
     setAvatarPreview('');
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setStatus('saving');
     setIsSaving(true);
 
     try {
       const dueISO = toISODate(formData.dueDate);
-      const updatedUser = {
-        ...user,
-        name: formData.name.trim(),
+      const profileUpdates = {
+        display_name: formData.name.trim() || null,
         email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        location: formData.location.trim(),
-        babyNickname: formData.babyNickname.trim(),
-        partnerName: formData.partnerName.trim(),
-        providerName: formData.providerName.trim(),
-        birthPlan: formData.birthPlan,
-        bio: formData.bio,
-        notes: formData.notes,
-        communication: formData.communication,
+        phone: formData.phone.trim() || null,
+        location: formData.location.trim() || null,
+        baby_nickname: formData.babyNickname.trim() || null,
+        partner_name: formData.partnerName.trim() || null,
+        provider_name: formData.providerName.trim() || null,
+        birth_plan: formData.birthPlan || null,
+        bio: formData.bio || null,
+        notes: formData.notes || null,
         timezone: formData.timezone,
         reminders,
-        supportCircle,
-        avatar: avatarPreview || null,
-        dueDate: dueISO,
-        lmpDate: formData.lmpDate || null,
+        support_circle: supportCircle,
+        avatar_url: avatarPreview || null,
+        due_date: dueISO,
+        lmp_date: formData.lmpDate || null,
+        preferences: {
+          ...(profileData?.preferences ?? {}),
+          communication: formData.communication,
+        },
       };
 
-      updateUser(updatedUser);
+      await updateUser(profileUpdates);
 
       const pregnancyRaw = localStorage.getItem('blessedbump_pregnancy_data');
       const pregnancyData = pregnancyRaw ? JSON.parse(pregnancyRaw) : {};

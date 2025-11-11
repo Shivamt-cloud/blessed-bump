@@ -9,14 +9,24 @@ function Navigation() {
   const navigate = useNavigate();
   const { user, logout, openAuthModal } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/calculator');
-    openAuthModal('login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Small delay to ensure all state is cleared
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Force a full page reload to clear all cached data and ensure clean state
+      window.location.replace('/calculator');
+    } catch (error) {
+      console.error('Logout error', error);
+      // Even on error, clear storage and reload
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace('/calculator');
+    }
   };
 
   const handleLinkClick = (event, path) => {
-    if (!user && path !== '/calculator') {
+    if (!user && !['/calculator', '/fertility'].includes(path)) {
       event.preventDefault();
       openAuthModal('login', path);
     }
@@ -44,6 +54,12 @@ function Navigation() {
       caption: 'Plan the countdown',
     },
     {
+      path: '/fertility',
+      icon: '🌸',
+      label: 'Fertility Oracle',
+      caption: 'Tune into your cycle',
+    },
+    {
       path: '/community',
       icon: '🤝',
       label: 'Village Voice',
@@ -56,7 +72,10 @@ function Navigation() {
       <div className="nav-container">
         <Link to="/calculator" className="nav-logo">
           <Logo size={40} />
-          <span className="logo-text">BlessedBump</span>
+          <div className="logo-wordmark">
+            <span className="logo-text">BlessedBump</span>
+            <span className="logo-tagline">Because every pregnancy story deserves to be celebrated</span>
+          </div>
         </Link>
 
         <div className="nav-links">

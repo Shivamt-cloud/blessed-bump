@@ -6,6 +6,7 @@ import Navigation from './components/Navigation';
 import Dashboard from './pages/Dashboard';
 import Calculator from './pages/Calculator';
 import Tracker from './pages/Tracker';
+import Fertility from './pages/Fertility';
 import Community from './pages/Community';
 import Profile from './pages/Profile';
 import AuthOverlay from './components/AuthOverlay';
@@ -17,17 +18,6 @@ function AppShell({ children }) {
     <>
       <Navigation />
       {children}
-    </>
-  );
-}
-
-function CalculatorRoute() {
-  const { user } = useAuth();
-
-  return (
-    <>
-      <Navigation />
-      <Calculator />
     </>
   );
 }
@@ -62,7 +52,19 @@ function App() {
           />
           <Route
             path="/calculator"
-            element={<CalculatorRoute />}
+            element={
+              <AppShell>
+                <Calculator />
+              </AppShell>
+            }
+          />
+          <Route
+            path="/fertility"
+            element={
+              <AppShell>
+                <Fertility />
+              </AppShell>
+            }
           />
           <Route
             path="/tracker"

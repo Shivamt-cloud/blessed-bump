@@ -1,0 +1,550 @@
+.fertility-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff5f9 0%, #fbf6ff 55%, #ffffff 100%);
+  padding-bottom: 4rem;
+}
+
+.fertility-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  padding: 4.5rem clamp(1.5rem, 5vw, 6rem) 3rem;
+  align-items: center;
+}
+
+.fertility-hero-copy p,
+.fertility-hero-copy h1 {
+  margin: 0;
+}
+
+.fertility-hero-copy .hero-kicker {
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #b86adf;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.fertility-hero-copy h1 {
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  color: #3d3463;
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+}
+
+.fertility-hero-copy > p {
+  font-size: 1.05rem;
+  color: #5c5187;
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.hero-bullets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 2rem 0 1.75rem;
+}
+
+.hero-bullets span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 28px rgba(186, 134, 223, 0.15);
+  border-radius: 999px;
+  padding: 0.65rem 1.15rem;
+  color: #6f5ab6;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(135deg, #f79ad3 0%, #b87bff 100%);
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 20px 36px rgba(242, 153, 223, 0.35);
+}
+
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px rgba(186, 134, 223, 0.45);
+}
+
+.fertility-hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.moon-orbit {
+  position: relative;
+  width: clamp(260px, 35vw, 360px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(255, 206, 236, 0.4));
+  box-shadow: inset 0 10px 40px rgba(255, 255, 255, 0.6), inset 0 -20px 60px rgba(161, 126, 248, 0.25);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.moon-core {
+  font-size: clamp(4rem, 6vw, 5rem);
+  filter: drop-shadow(0 12px 25px rgba(154, 107, 255, 0.35));
+  animation: moon-pulse 6s ease-in-out infinite;
+}
+
+.moon-ring {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  border: 2px dashed rgba(186, 134, 223, 0.4);
+  animation: orbit-spin 18s linear infinite;
+}
+
+.moon-fireflies {
+  position: absolute;
+  inset: 12%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.moon-fireflies span {
+  color: rgba(176, 126, 227, 0.75);
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  animation: twinkle 4.5s ease-in-out infinite;
+}
+
+.fertility-body {
+  margin-top: 1rem;
+  padding: 0 clamp(1.5rem, 5vw, 5rem);
+}
+
+.fertility-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.fertility-calc-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.fertility-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.fertility-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow:
+    0 24px 48px rgba(89, 69, 141, 0.12),
+    inset 0 0 0 1px rgba(228, 214, 255, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #433971;
+}
+
+.card-header p {
+  margin: 0.35rem 0 0;
+  color: #6e609b;
+  font-size: 0.95rem;
+}
+
+.fertility-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+}
+
+.form-duo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.form-group {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #4b3f74;
+  letter-spacing: 0.02em;
+}
+
+.form-group input {
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(167, 148, 214, 0.35);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #b17cff;
+  box-shadow: 0 0 0 4px rgba(177, 124, 255, 0.2);
+}
+
+.form-group p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #7466a5;
+}
+
+.form-group.tucked {
+  margin-top: 1.25rem;
+}
+
+.fertility-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #f79ad3 0%, #b87bff 100%);
+  color: #fff;
+  padding: 0.8rem 1.4rem;
+  border: none;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 20px 30px rgba(242, 153, 223, 0.22);
+}
+
+.fertility-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 24px 40px rgba(186, 134, 223, 0.32);
+}
+
+.fertility-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.fertility-status {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.fertility-status.info {
+  background: rgba(177, 124, 255, 0.12);
+  color: #5d3ea6;
+}
+
+.fertility-status.success {
+  background: rgba(132, 215, 190, 0.16);
+  color: #20715a;
+}
+
+.fertility-status.error {
+  background: rgba(255, 179, 186, 0.18);
+  color: #b44a5a;
+}
+
+.fertility-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.4rem;
+  margin: 1.75rem 0 1.6rem;
+}
+
+.summary-pod {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(244, 232, 255, 0.8));
+  box-shadow:
+    0 22px 38px rgba(111, 90, 182, 0.18),
+    inset 0 0 0 1px rgba(193, 168, 255, 0.3);
+  padding: 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.summary-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 6px 12px rgba(176, 126, 227, 0.25));
+}
+
+.summary-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.summary-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #7a6ab0;
+}
+
+.summary-value {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #3d3463;
+}
+
+.summary-text p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #6e609b;
+  line-height: 1.35;
+}
+
+.summary-glow {
+  position: absolute;
+  inset: -40% -10% auto auto;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(255, 182, 216, 0.45) 0%, rgba(255, 255, 255, 0) 70%);
+  opacity: 0.9;
+  pointer-events: none;
+  transform: rotate(12deg);
+}
+
+.cycle-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.cycle-bar > div {
+  background: linear-gradient(135deg, rgba(177, 124, 255, 0.55), rgba(255, 154, 203, 0.45));
+  padding: 0.85rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: #3d296a;
+  min-width: 110px;
+  box-shadow: inset 0 0 0 1px rgba(154, 107, 255, 0.3);
+}
+
+.cycle-bar small {
+  font-size: 0.75rem;
+  color: #5c4a94;
+}
+
+.cycle-footnote {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6e609b;
+}
+
+.checker-card {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.5rem;
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  box-shadow: inset 0 0 0 1px rgba(177, 124, 255, 0.25);
+  background: rgba(243, 235, 255, 0.7);
+}
+
+.checker-card.positive {
+  background: rgba(204, 242, 221, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(62, 153, 119, 0.28);
+}
+
+.checker-card.neutral {
+  background: rgba(255, 239, 222, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(226, 167, 103, 0.28);
+}
+
+.checker-icon {
+  font-size: 2rem;
+}
+
+.checker-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: #3d3463;
+}
+
+.checker-card p {
+  margin: 0;
+  color: #6e609b;
+  font-size: 0.92rem;
+}
+
+.checker-prob {
+  margin-top: 0.4rem;
+}
+
+.fertility-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.75rem;
+}
+
+.fertility-save-hint {
+  font-size: 0.85rem;
+  color: #6e609b;
+}
+
+.fertility-placeholder {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  padding: 2.25rem;
+  text-align: center;
+  color: #6e609b;
+  box-shadow: inset 0 0 0 1px rgba(228, 214, 255, 0.45);
+}
+
+.fertility-placeholder h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.3rem;
+  color: #433971;
+}
+
+.insight-stack {
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.insight-stack li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.insight-icon {
+  font-size: 1.6rem;
+}
+
+.insight-stack h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: #433971;
+}
+
+.insight-stack p {
+  margin: 0;
+  color: #6e609b;
+  line-height: 1.45;
+}
+
+.saved-insights {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.35rem;
+}
+
+@keyframes moon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 1024px) {
+  .fertility-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fertility-side {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .fertility-side .fertility-card {
+    flex: 1 1 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fertility-hero {
+    padding-top: 3.25rem;
+  }
+
+  .fertility-body {
+    padding: 0 1.25rem;
+  }
+
+  .form-duo {
+    flex-direction: column;
+  }
+
+  .fertility-card {
+    padding: 1.5rem;
+  }
+
+  .hero-bullets {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moon-ring,
+  .moon-fireflies span,
+  .moon-core {
+    animation: none;
+  }
+}
+

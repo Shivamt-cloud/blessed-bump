@@ -60,11 +60,26 @@
   gap: 0.75rem;
 }
 
+.auth-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  line-height: 1.1;
+}
+
 .auth-brand-name {
   font-size: 1.35rem;
   font-weight: 700;
   color: #2d1b4e;
   letter-spacing: 0.04em;
+}
+
+.auth-brand-tagline {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(74, 56, 126, 0.68);
 }
 
 .auth-branding h2 {
@@ -151,6 +166,14 @@
   font-weight: 600;
 }
 
+.auth-info {
+  background: rgba(124, 114, 255, 0.16);
+  color: #3d2c7a;
+  border-radius: 12px;
+  padding: 0.75rem 0.95rem;
+  font-weight: 600;
+}
+
 .auth-submit {
   margin-top: 0.5rem;
   padding: 1rem;
@@ -169,6 +192,20 @@
 .auth-submit:hover {
   transform: translateY(-1px);
   box-shadow: 0 22px 36px rgba(124, 114, 255, 0.3);
+}
+
+.auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 12px 20px rgba(124, 114, 255, 0.18);
+}
+
+.auth-progress {
+  margin-top: 0.65rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(45, 27, 78, 0.75);
 }
 
 .auth-footnote {

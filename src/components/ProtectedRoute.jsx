@@ -4,14 +4,16 @@ import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 function ProtectedRoute({ children }) {
-  const { user, loading, openAuthModal } = useAuth();
+  const { user, loading, session, openAuthModal } = useAuth();
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Only open modal if we're not loading and truly have no user/session
+    // Also check session in case user object hasn't populated yet
+    if (!loading && !user && !session) {
       openAuthModal('login', location.pathname);
     }
-  }, [loading, user, location.pathname, openAuthModal]);
+  }, [loading, user, session, location.pathname, openAuthModal]);
 
   if (loading) {
     return (
@@ -30,7 +32,8 @@ function ProtectedRoute({ children }) {
     );
   }
 
-  if (!user) {
+  // Check both user and session - session might be available before user object is built
+  if (!user && !session) {
     return <Navigate to="/calculator" replace />;
   }
 

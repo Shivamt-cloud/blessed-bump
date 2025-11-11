@@ -7,14 +7,18 @@ import './Login.css';
 function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const [infoMessage, setInfoMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setInfoMessage('');
 
     if (!name || !email || !password) {
       setError('Please fill in all fields');
@@ -26,16 +30,27 @@ function Signup() {
       return;
     }
 
-    // Mock signup - in production, this would call an API
-    const userData = {
-      id: Date.now().toString(),
-      email,
-      name,
-      dueDate: null,
-    };
+    if (phone && phone.replace(/[^0-9]/g, '').length < 7) {
+      setError('Phone number should include at least 7 digits.');
+      return;
+    }
 
-    login(userData);
-    navigate('/dashboard');
+    try {
+      setIsSubmitting(true);
+      const { data } = await signup({ email, password, name, phone: phone.trim() });
+
+      if (data.session) {
+        navigate('/dashboard', { replace: true });
+      } else {
+        setInfoMessage(
+          'Check your email to confirm your account, then sign in to continue.',
+        );
+      }
+    } catch (signupError) {
+      setError(signupError.message || 'Unable to create account. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -43,12 +58,16 @@ function Signup() {
       <div className="login-card">
         <div className="login-header">
           <Logo size={60} />
-          <h1>Join BlessedBump</h1>
+            <div className="login-wordmark">
+              <h1>Join BlessedBump</h1>
+              <span className="login-tagline">Because every pregnancy story deserves to be celebrated</span>
+            </div>
           <p>Start your pregnancy journey with us</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           {error && <div className="error-message">{error}</div>}
+          {!error && infoMessage && <div className="auth-info">{infoMessage}</div>}
           
           <div className="form-group">
             <label htmlFor="name">Name</label>
@@ -59,6 +78,17 @@ function Signup() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phone">Phone (optional)</label>
+            <input
+              type="tel"
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Add your phone number"
             />
           </div>
 
@@ -86,9 +116,10 @@ function Signup() {
             />
           </div>
 
-          <button type="submit" className="btn-primary">
+          <button type="submit" className="btn-primary" disabled={isSubmitting}>
             Sign Up
           </button>
+          {isSubmitting && <p className="auth-progress">Creating your account…</p>}
         </form>
 
         <div className="login-footer">

@@ -3,25 +3,64 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { calculateCurrentWeek, getBabySize, getTrimester, getWeeklyMilestone } from '../utils/pregnancyCalculator';
 import BabyExpress from '../components/BabyExpress';
+import DatabaseSyncCheck from '../components/DatabaseSyncCheck';
 import './Dashboard.css';
 
 function Dashboard() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [pregnancyData, setPregnancyData] = useState(null);
   const [currentWeek, setCurrentWeek] = useState(null);
 
   useEffect(() => {
-    // Get pregnancy data from localStorage
-    const savedData = localStorage.getItem('blessedbump_pregnancy_data');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      setPregnancyData(data);
-      if (data.dueDate) {
-        const weekData = calculateCurrentWeek(data.dueDate);
-        setCurrentWeek(weekData);
+    // Wait for auth to finish loading
+    if (loading) {
+      return;
+    }
+
+    // Load from user profile first (Supabase), then fallback to localStorage
+    if (user?.dueDate) {
+      try {
+        // Handle both string and Date formats
+        const dueDate = user.dueDate instanceof Date 
+          ? user.dueDate 
+          : new Date(user.dueDate);
+        
+        // Validate the date
+        if (!isNaN(dueDate.getTime())) {
+          const weekData = calculateCurrentWeek(dueDate);
+          setCurrentWeek(weekData);
+          setPregnancyData({
+            dueDate: user.dueDate,
+            lmpDate: user.lmpDate,
+          });
+        } else {
+          console.error('Invalid due date format:', user.dueDate);
+        }
+      } catch (e) {
+        console.error('Failed to parse due date from user profile', e);
+      }
+    } else {
+      // Fallback to localStorage
+      const savedData = localStorage.getItem('blessedbump_pregnancy_data');
+      if (savedData) {
+        try {
+          const data = JSON.parse(savedData);
+          setPregnancyData(data);
+          if (data.dueDate) {
+            const dueDate = data.dueDate instanceof Date 
+              ? data.dueDate 
+              : new Date(data.dueDate);
+            if (!isNaN(dueDate.getTime())) {
+              const weekData = calculateCurrentWeek(dueDate);
+              setCurrentWeek(weekData);
+            }
+          }
+        } catch (e) {
+          console.error('Failed to parse pregnancy data from localStorage', e);
+        }
       }
     }
-  }, []);
+  }, [user, loading]);
 
   const babyInfo = currentWeek ? getBabySize(currentWeek.weeks) : null;
   const trimester = currentWeek ? getTrimester(currentWeek.weeks) : null;
@@ -281,8 +320,10 @@ function Dashboard() {
     <div className="dashboard">
       <div className="dashboard-header">
         <h1>Hey wonder-mom, {user?.name}! ✨</h1>
-        <p className="subtitle">Your BlessedBump storyline is unfolding beautifully—here’s today’s chapter.</p>
+        <p className="subtitle">Your BlessedBump storyline is unfolding beautifully—here's today's chapter.</p>
       </div>
+
+      <DatabaseSyncCheck />
 
       <div className="dashboard-grid">
         {/* Main Card - Current Week */}

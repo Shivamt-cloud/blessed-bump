@@ -8,31 +8,28 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Simple validation (in production, this would call an API)
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
 
-    // Mock login - in production, verify with backend
-    const userData = {
-      id: '1',
-      email,
-      name: email.split('@')[0],
-      dueDate: localStorage.getItem('blessedbump_pregnancy_data') 
-        ? JSON.parse(localStorage.getItem('blessedbump_pregnancy_data')).dueDate 
-        : null,
-    };
-
-    login(userData);
-    navigate('/dashboard');
+    try {
+      setIsSubmitting(true);
+      await login({ email, password });
+      navigate('/dashboard', { replace: true });
+    } catch (loginError) {
+      setError(loginError.message || 'Unable to sign in. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -40,7 +37,10 @@ function Login() {
       <div className="login-card">
         <div className="login-header">
           <Logo size={60} />
-          <h1>Welcome to BlessedBump</h1>
+            <div className="login-wordmark">
+              <h1>Welcome to BlessedBump</h1>
+              <span className="login-tagline">Because every pregnancy story deserves to be celebrated</span>
+            </div>
           <p>Your pregnancy & parenting companion</p>
         </div>
 
@@ -71,9 +71,10 @@ function Login() {
             />
           </div>
 
-          <button type="submit" className="btn-primary">
+          <button type="submit" className="btn-primary" disabled={isSubmitting}>
             Sign In
           </button>
+          {isSubmitting && <p className="auth-progress">Signing you in…</p>}
         </form>
 
         <div className="login-footer">
@@ -81,7 +82,7 @@ function Login() {
             Don't have an account? <Link to="/signup">Sign up</Link>
           </p>
           <p className="demo-note">
-            💡 Demo mode: Use any email/password to explore
+            💡 Create a demo account with any email/password to explore.
           </p>
         </div>
       </div>
