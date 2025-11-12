@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { calculateCurrentWeek, getBabySize, getTrimester, getWeeklyMilestone } from '../utils/pregnancyCalculator';
 import BabyExpress from '../components/BabyExpress';
-import DatabaseSyncCheck from '../components/DatabaseSyncCheck';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -322,8 +321,6 @@ function Dashboard() {
         <h1>Hey wonder-mom, {user?.name}! ✨</h1>
         <p className="subtitle">Your BlessedBump storyline is unfolding beautifully—here's today's chapter.</p>
       </div>
-
-      <DatabaseSyncCheck />
 
       <div className="dashboard-grid">
         {/* Main Card - Current Week */}
