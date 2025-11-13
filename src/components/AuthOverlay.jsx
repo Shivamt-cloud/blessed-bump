@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { validateEmail } from '../utils/emailValidation';
 import Logo from './Logo';
 import './AuthOverlay.css';
 
@@ -161,8 +162,15 @@ function AuthOverlay() {
     setError('');
     setInfoMessage('');
 
-    if (!name || !email || !password) {
-      setError('Please complete all fields.');
+    if (!name || !email || !password || !phone) {
+      setError('Please complete all fields. Phone number is required.');
+      return;
+    }
+
+    // Validate email format and check for disposable emails
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      setError(emailValidation.error);
       return;
     }
 
@@ -171,9 +179,10 @@ function AuthOverlay() {
       return;
     }
 
-    const numericPhoneLength = phone ? phone.replace(/[^0-9]/g, '').length : 0;
-    if (phone && numericPhoneLength < 7) {
-      setError('Phone number should include at least 7 digits.');
+    // Phone number validation - must have at least 7 digits
+    const numericPhoneLength = phone.replace(/[^0-9]/g, '').length;
+    if (numericPhoneLength < 7) {
+      setError('Phone number must include at least 7 digits.');
       return;
     }
 
@@ -266,16 +275,20 @@ function AuthOverlay() {
 
             {view === 'signup' && (
               <div className="auth-field">
-                <label htmlFor="auth-phone">Phone (optional)</label>
+                <label htmlFor="auth-phone">Phone <span style={{ color: '#e91e63' }}>*</span></label>
                 <input
                   id="auth-phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Add your phone number"
+                  placeholder="Enter your phone number (e.g., +1 555 123 4567)"
                   autoComplete="tel"
                   pattern="^[0-9+()\\-\\s]{7,}$"
+                  required
                 />
+                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+                  Required for account verification
+                </p>
               </div>
             )}
 

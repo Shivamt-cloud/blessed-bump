@@ -116,17 +116,19 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let subscription;
+    let mounted = true;
 
     const init = async () => {
       // Set a timeout to prevent hanging
       const timeoutId = setTimeout(() => {
+        if (!mounted) return;
         // eslint-disable-next-line no-console
         console.warn('Session initialization timeout - proceeding without session');
         setSession(null);
         setProfile(null);
         setUser(null);
         setLoading(false);
-      }, 5000); // 5 second timeout
+      }, 10000); // Increased to 10 seconds for slower connections
 
       try {
         const {
@@ -134,50 +136,86 @@ export function AuthProvider({ children }) {
           error: sessionError,
         } = await supabase.auth.getSession();
 
+        if (!mounted) {
+          clearTimeout(timeoutId);
+          return;
+        }
+
         clearTimeout(timeoutId);
 
         if (sessionError) {
           // eslint-disable-next-line no-console
           console.error('Session error', sessionError);
-          // Clear any stale session data
-          setSession(null);
-          setProfile(null);
-          setUser(null);
+          // Don't clear session on error - might be a temporary network issue
+          // Only clear if it's a clear authentication error
+          if (sessionError.message?.includes('JWT') || sessionError.message?.includes('expired')) {
+            setSession(null);
+            setProfile(null);
+            setUser(null);
+          }
           setLoading(false);
           return;
         }
 
-        setSession(initialSession);
-        if (initialSession?.user) {
-          await syncProfile(initialSession.user);
+        if (initialSession) {
+          setSession(initialSession);
+          if (initialSession.user) {
+            await syncProfile(initialSession.user);
+          } else {
+            setProfile(null);
+            setUser(null);
+          }
         } else {
+          // No session found
+          setSession(null);
           setProfile(null);
           setUser(null);
         }
       } catch (error) {
+        if (!mounted) {
+          clearTimeout(timeoutId);
+          return;
+        }
         clearTimeout(timeoutId);
         // eslint-disable-next-line no-console
         console.error('Failed to initialize auth session', error);
-        // Ensure state is cleared on error
-        setSession(null);
-        setProfile(null);
-        setUser(null);
+        // Don't clear state on network errors - might be temporary
+        if (error.message?.includes('network') || error.message?.includes('fetch')) {
+          // Network error - keep existing state if any
+          // eslint-disable-next-line no-console
+          console.warn('Network error during session init, keeping existing state');
+        } else {
+          setSession(null);
+          setProfile(null);
+          setUser(null);
+        }
       } finally {
-        // Always set loading to false, even on error
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     init();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, nextSession) => {
+      async (event, nextSession) => {
+        if (!mounted) return;
+        
+        // eslint-disable-next-line no-console
+        console.log('Auth state changed:', event, nextSession ? 'Session exists' : 'No session');
+        
         setSession(nextSession);
         if (nextSession?.user) {
           await syncProfile(nextSession.user);
         } else {
-          setProfile(null);
-          setUser(null);
+          // Only clear on explicit sign out, not on token refresh failures or initial load
+          if (event === 'SIGNED_OUT') {
+            setProfile(null);
+            setUser(null);
+          }
+          // For TOKEN_REFRESHED with null session, keep existing state
+          // as it might be a temporary refresh issue
         }
       },
     );
@@ -185,6 +223,7 @@ export function AuthProvider({ children }) {
     subscription = authListener?.subscription;
 
     return () => {
+      mounted = false;
       subscription?.unsubscribe();
     };
   }, [syncProfile]);

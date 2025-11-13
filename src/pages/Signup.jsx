@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { validateEmail } from '../utils/emailValidation';
 import Logo from '../components/Logo';
 import './Login.css';
 
@@ -20,8 +21,15 @@ function Signup() {
     setError('');
     setInfoMessage('');
 
-    if (!name || !email || !password) {
-      setError('Please fill in all fields');
+    if (!name || !email || !password || !phone) {
+      setError('Please fill in all fields. Phone number is required.');
+      return;
+    }
+
+    // Validate email format and check for disposable emails
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      setError(emailValidation.error);
       return;
     }
 
@@ -30,8 +38,10 @@ function Signup() {
       return;
     }
 
-    if (phone && phone.replace(/[^0-9]/g, '').length < 7) {
-      setError('Phone number should include at least 7 digits.');
+    // Phone number validation - must have at least 7 digits
+    const numericPhoneLength = phone.replace(/[^0-9]/g, '').length;
+    if (numericPhoneLength < 7) {
+      setError('Phone number must include at least 7 digits.');
       return;
     }
 
@@ -82,14 +92,18 @@ function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">Phone (optional)</label>
+            <label htmlFor="phone">Phone <span style={{ color: '#e91e63' }}>*</span></label>
             <input
               type="tel"
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Add your phone number"
+              placeholder="Enter your phone number (e.g., +1 555 123 4567)"
+              required
             />
+            <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.25rem' }}>
+              Required for account verification
+            </p>
           </div>
 
           <div className="form-group">

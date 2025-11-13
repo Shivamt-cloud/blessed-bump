@@ -215,24 +215,148 @@
   color: rgba(45, 27, 78, 0.65);
 }
 
+/* Tablet Styles */
 @media (max-width: 880px) {
   .auth-modal {
     grid-template-columns: 1fr;
     text-align: center;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .auth-branding {
     align-items: center;
+    padding: 1.5rem;
+  }
+
+  .auth-branding h2 {
+    font-size: 1.5rem;
+  }
+
+  .auth-branding p {
+    font-size: 0.95rem;
+  }
+
+  .auth-form-wrap {
+    padding: 1.5rem;
   }
 }
 
-@media (max-width: 520px) {
+/* Mobile Styles */
+@media (max-width: 640px) {
   .auth-modal {
-    padding: 1.6rem;
+    padding: 1.5rem;
+    max-width: 95vw;
+    margin: 1rem;
+  }
+
+  .auth-close {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .auth-branding {
+    padding: 1.25rem;
+  }
+
+  .auth-logo-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .auth-brand-name {
+    font-size: 1.2rem;
+  }
+
+  .auth-brand-tagline {
+    font-size: 0.65rem;
+  }
+
+  .auth-branding h2 {
+    font-size: 1.35rem;
+    margin-top: 0.75rem;
+  }
+
+  .auth-branding p {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .auth-form-wrap {
+    padding: 1.25rem;
   }
 
   .auth-toggle {
     grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .auth-toggle-btn {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .auth-field {
+    margin-bottom: 1rem;
+  }
+
+  .auth-field label {
+    font-size: 0.9rem;
+  }
+
+  .auth-field input {
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  .auth-submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .auth-footnote {
+    font-size: 0.85rem;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .auth-modal {
+    padding: 1.25rem;
+    max-width: 100vw;
+    margin: 0.5rem;
+    border-radius: 16px;
+  }
+
+  .auth-branding {
+    padding: 1rem;
+  }
+
+  .auth-branding h2 {
+    font-size: 1.25rem;
+  }
+
+  .auth-branding p {
+    font-size: 0.85rem;
+  }
+
+  .auth-form-wrap {
+    padding: 1rem;
+  }
+
+  .auth-field input {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .auth-submit {
+    padding: 0.9rem;
+    font-size: 0.95rem;
   }
 }
 

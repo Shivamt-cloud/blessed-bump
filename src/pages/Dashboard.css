@@ -889,6 +889,121 @@
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .dashboard {
+    padding: 1.5rem 1rem;
+  }
+
+  .dashboard-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+
+  .dashboard-header .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .main-card-body {
+    gap: 1rem;
+  }
+
+  .growth-details {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .baby-voice-card {
+    padding: 1.25rem;
+  }
+
+  .baby-voice-text {
+    font-size: 1.1rem;
+  }
+
+  .insights-countdown {
+    padding: 1rem;
+  }
+
+  .insight-card {
+    padding: 1rem;
+  }
+
+  .metric-ring {
+    width: 60px;
+    height: 60px;
+  }
+
+  .featured-action {
+    padding: 1rem;
+  }
+
+  .check-in-grid {
+    gap: 0.75rem;
+  }
+
+  .nourish-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 1rem 0.75rem;
+  }
+
+  .dashboard-header {
+    padding: 1rem 0.75rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-header .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .card {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .week-badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .week-info h2 {
+    font-size: 1.4rem;
+  }
+
+  .baby-voice-text {
+    font-size: 1rem;
+  }
+
+  .insight-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .metric-ring {
+    width: 50px;
+    height: 50px;
+  }
+
+  .metric-ring svg {
+    width: 50px;
+    height: 50px;
+  }
 }
 
 @keyframes bounce {

@@ -18,10 +18,39 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
+// Custom storage adapter for better session persistence
+const customStorage = {
+  getItem: (key) => {
+    if (typeof window === 'undefined') return null;
+    try {
+      return window.localStorage.getItem(key);
+    } catch (e) {
+      console.warn('localStorage.getItem failed:', e);
+      return null;
+    }
+  },
+  setItem: (key, value) => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn('localStorage.setItem failed:', e);
+    }
+  },
+  removeItem: (key) => {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.removeItem(key);
+    } catch (e) {
+      console.warn('localStorage.removeItem failed:', e);
+    }
+  },
+};
+
 // Configure Supabase client with storage that works in private mode
 export const supabase = createClient(safeUrl, safeKey, {
   auth: {
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    storage: typeof window !== 'undefined' ? customStorage : undefined,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,

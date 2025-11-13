@@ -1115,35 +1115,214 @@
   }
 }
 
-@media (max-width: 640px) {
+/* Tablet Styles */
+@media (max-width: 768px) {
   .calculator-page {
-    padding: 2.4rem 1rem;
+    padding: 2rem 1.5rem;
   }
 
   .calculator-hero {
-    padding: 1.8rem;
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+
+  .hero-visual {
+    margin-top: 2rem;
+  }
+
+  .summary-card {
+    padding: 1.5rem;
+  }
+
+  .summary-stat-group {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .care-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .planning-list li {
+    grid-template-columns: 40px 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .calculator-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .calculator-hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+
+  .hero-copy p {
+    font-size: 0.95rem;
+  }
+
+  .hero-highlights {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .hero-highlights span {
     width: 100%;
     text-align: center;
+    padding: 0.6rem;
+    font-size: 0.85rem;
   }
 
-  .calculator-tabs {
-    grid-template-columns: 1fr;
+  .calculator-form {
+    padding: 1.5rem;
   }
 
-  .summary-stat-group {
-    grid-template-columns: 1fr;
+  .summary-card {
+    padding: 1.25rem;
+  }
+
+  .summary-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .summary-stat {
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .summary-badges {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .summary-badges span {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .summary-window {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .progress-card {
+    padding: 1.25rem;
+  }
+
+  .progress-visual svg {
+    width: 100px;
+    height: 100px;
   }
 
   .timeline-item {
     grid-template-columns: 16px 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .timeline-content h4 {
+    font-size: 1rem;
   }
 
   .baby-measures {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .insight-card {
+    padding: 1.25rem;
+  }
+
+  .insight-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .planning-list li {
+    padding: 1rem;
+  }
+
+  .planning-icon {
+    font-size: 1.5rem;
+  }
+
+  .planning-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .btn-save,
+  .btn-calculate {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .calculator-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .calculator-hero {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero-copy p {
+    font-size: 0.9rem;
+  }
+
+  .calculator-form {
+    padding: 1.25rem;
+  }
+
+  .summary-card {
+    padding: 1rem;
+  }
+
+  .summary-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .stat-value {
+    font-size: 1.1rem;
+  }
+
+  .progress-visual svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .insight-card {
+    padding: 1rem;
+  }
+
+  .insight-card h3 {
+    font-size: 1.1rem;
   }
 }
 

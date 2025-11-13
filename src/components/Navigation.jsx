@@ -8,6 +8,7 @@ function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout, openAuthModal } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   const handleLogout = async () => {
     try {
@@ -67,6 +68,15 @@ function Navigation() {
     },
   ];
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleNavClick = (event, path) => {
+    handleLinkClick(event, path);
+    setMobileMenuOpen(false);
+  };
+
   return (
     <nav className="navigation">
       <div className="nav-container">
@@ -78,13 +88,27 @@ function Navigation() {
           </div>
         </Link>
 
-        <div className="nav-links">
+        <button
+          type="button"
+          className="mobile-menu-toggle"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <span className={mobileMenuOpen ? 'hamburger open' : 'hamburger'}>
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
+
+        <div className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
-              onClick={(event) => handleLinkClick(event, item.path)}
+              onClick={(event) => handleNavClick(event, item.path)}
             >
               <span className="nav-icon" aria-hidden>
                 {item.icon}
@@ -97,13 +121,16 @@ function Navigation() {
           ))}
         </div>
 
-        <div className="nav-user">
+        <div className={`nav-user ${mobileMenuOpen ? 'mobile-open' : ''}`}>
           {user ? (
             <>
               <button
                 type="button"
                 className="user-name"
-                onClick={() => navigate('/profile')}
+                onClick={() => {
+                  navigate('/profile');
+                  setMobileMenuOpen(false);
+                }}
                 title="Open profile"
               >
                 {user.avatar ? (
@@ -119,12 +146,25 @@ function Navigation() {
                   {user.name ? `Hi, ${user.name}!` : 'Your profile'}
                 </span>
               </button>
-              <button onClick={handleLogout} className="logout-btn">
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="logout-btn"
+              >
                 Logout
               </button>
             </>
           ) : (
-            <button type="button" className="login-btn" onClick={() => openAuthModal('login')}>
+            <button
+              type="button"
+              className="login-btn"
+              onClick={() => {
+                openAuthModal('login');
+                setMobileMenuOpen(false);
+              }}
+            >
               Login / Join
             </button>
           )}

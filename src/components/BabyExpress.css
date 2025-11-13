@@ -766,21 +766,165 @@
   }
 }
 
+/* Tablet Styles */
+@media (max-width: 768px) {
+  .baby-express-card {
+    padding: 1.5rem;
+  }
+
+  .baby-express-header h3 {
+    font-size: 1.5rem;
+  }
+
+  .baby-express-meta {
+    font-size: 0.9rem;
+  }
+
+  .baby-express-track {
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  .express-track-inner {
+    height: 260px;
+  }
+
+  .express-stop {
+    min-width: 120px;
+  }
+
+  .express-detail-card {
+    max-width: 90vw;
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 720px) {
   .express-scroll {
     padding-bottom: 0.75rem;
   }
 
   .express-stop {
-    min-width: 110px;
+    min-width: 100px;
   }
 
-  .express-stop .stop-label span {
+  .express-stop .stop-label span:first-child {
     font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .stop-description {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
   }
 
   .baby-express-footer {
     flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  .baby-express-card {
+    padding: 1.25rem;
+  }
+
+  .baby-express-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .baby-express-header h3 {
+    font-size: 1.35rem;
+  }
+
+  .baby-express-meta {
+    font-size: 0.85rem;
+  }
+
+  .baby-express-track {
+    padding: 1.5rem 0.75rem 1.25rem;
+  }
+
+  .track-hint {
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+  }
+
+  .express-track-inner {
+    height: 240px;
+  }
+
+  .express-stop {
+    min-width: 90px;
+  }
+
+  .express-stop .stop-label span:first-child {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .stop-description {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+    max-width: 140px;
+  }
+
+  .stop-indicator {
+    font-size: 0.65rem;
+  }
+
+  .express-cart {
+    transform: translate(-50%, -14px);
+  }
+
+  .stroller-body {
+    width: 60px;
+    height: 50px;
+  }
+
+  .stroller-canopy {
+    width: 50px;
+    height: 25px;
+  }
+
+  .stroller-seat {
+    width: 40px;
+    height: 20px;
+    font-size: 1rem;
+  }
+
+  .express-detail-card {
+    max-width: 95vw;
+    padding: 1.25rem;
+    margin: 0.5rem;
+  }
+
+  .express-detail-card h4 {
+    font-size: 1.25rem;
+  }
+
+  .express-detail-description {
+    font-size: 0.9rem;
+  }
+
+  .express-detail-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .express-detail-actions button {
+    width: 100%;
+    padding: 0.85rem;
+  }
+
+  .baby-express-footer {
+    padding: 0.85rem;
+  }
+
+  .baby-express-footer p {
+    font-size: 0.85rem;
   }
 }
 
