@@ -1,5 +1,19 @@
 // List of common disposable/temporary email domains
 const DISPOSABLE_EMAIL_DOMAINS = [
+  // Test domains (commonly used for testing, not real accounts)
+  'test.com',
+  'test.org',
+  'test.net',
+  'test.email',
+  'example.com',
+  'example.org',
+  'example.net',
+  'example.email',
+  'sample.com',
+  'sample.org',
+  'demo.com',
+  'demo.org',
+  // Disposable email services
   '10minutemail.com',
   '20minutemail.com',
   '33mail.com',

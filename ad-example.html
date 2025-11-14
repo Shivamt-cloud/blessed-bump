@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlessedBump Ad Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .example-section {
+      background: white;
+      padding: 30px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #FF6B9D;
+    }
+    h2 {
+      color: #7C72FF;
+      margin-top: 30px;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 BlessedBump Advertisement Examples</h1>
+    
+    <div class="example-section">
+      <h2>Example 1: Basic Ad (Auto-init)</h2>
+      <p>This ad automatically initializes when the page loads:</p>
+      <div id="blessedbump-ad-1" data-auto-init="true"></div>
+    </div>
+
+    <div class="example-section">
+      <h2>Example 2: Custom Configuration</h2>
+      <p>Ad with custom settings:</p>
+      <div id="blessedbump-ad-2"></div>
+    </div>
+
+    <div class="example-section">
+      <h2>Example 3: Sidebar Ad (300px width)</h2>
+      <p>Perfect for sidebar placements:</p>
+      <div id="blessedbump-ad-3" style="max-width: 300px; margin: 0 auto;"></div>
+    </div>
+
+    <div class="example-section">
+      <h2>📝 How to Use</h2>
+      <h3>Method 1: Auto-init (Easiest)</h3>
+      <pre><code>&lt;!-- Include the script --&gt;
+&lt;script src="blessedbump-ad.js"&gt;&lt;/script&gt;
+
+&lt;!-- Add container with auto-init --&gt;
+&lt;div id="blessedbump-ad" data-auto-init="true"&gt;&lt;/div&gt;</code></pre>
+
+      <h3>Method 2: Manual Init</h3>
+      <pre><code>&lt;!-- Include the script --&gt;
+&lt;script src="blessedbump-ad.js"&gt;&lt;/script&gt;
+
+&lt;!-- Add container --&gt;
+&lt;div id="my-ad-container"&gt;&lt;/div&gt;
+
+&lt;!-- Initialize --&gt;
+&lt;script&gt;
+  BlessedBumpAd.init({
+    container: 'my-ad-container',
+    websiteUrl: 'https://blessedbump.in',
+    tagline: 'Your Journey, Your Glow, Your Village',
+    trackClicks: true,
+    trackViews: true
+  });
+&lt;/script&gt;</code></pre>
+
+      <h3>Method 3: Custom Configuration</h3>
+      <pre><code>BlessedBumpAd.init({
+  container: 'blessedbump-ad',
+  websiteUrl: 'https://blessedbump.in',
+  tagline: 'Your Journey, Your Glow, Your Village',
+  primaryColor: '#FF9FB8',
+  secondaryColor: '#7C72FF',
+  minHeight: '200px',
+  trackClicks: true,
+  trackViews: true,
+  animation: true,
+  analyticsEndpoint: 'https://your-analytics-endpoint.com/track'
+});</code></pre>
+    </div>
+
+    <div class="example-section">
+      <h2>⚙️ Configuration Options</h2>
+      <ul>
+        <li><code>container</code> - ID of the container element (default: 'blessedbump-ad')</li>
+        <li><code>websiteUrl</code> - Your website URL (default: 'https://blessedbump.in')</li>
+        <li><code>tagline</code> - Ad tagline (default: 'Your Journey, Your Glow, Your Village')</li>
+        <li><code>primaryColor</code> - Primary brand color (default: '#FF9FB8')</li>
+        <li><code>secondaryColor</code> - Secondary brand color (default: '#7C72FF')</li>
+        <li><code>minHeight</code> - Minimum ad height (default: '200px')</li>
+        <li><code>trackClicks</code> - Track click events (default: true)</li>
+        <li><code>trackViews</code> - Track view events (default: true)</li>
+        <li><code>animation</code> - Enable animations (default: true)</li>
+        <li><code>analyticsEndpoint</code> - Custom analytics endpoint URL (optional)</li>
+      </ul>
+    </div>
+
+    <div class="example-section">
+      <h2>📊 Analytics</h2>
+      <p>The script automatically tracks:</p>
+      <ul>
+        <li><strong>Views</strong> - When the ad is displayed</li>
+        <li><strong>Clicks</strong> - When users click the ad</li>
+      </ul>
+      <p>Events are logged to console and can be sent to:</p>
+      <ul>
+        <li>Google Analytics (if gtag is available)</li>
+        <li>Custom analytics endpoint (if configured)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Include the ad script -->
+  <script src="blessedbump-ad.js"></script>
+
+  <!-- Example 2: Custom configuration -->
+  <script>
+    BlessedBumpAd.init({
+      container: 'blessedbump-ad-2',
+      tagline: 'Track Your Journey, Celebrate Every Moment',
+      animation: true
+    });
+  </script>
+
+  <!-- Example 3: Sidebar ad -->
+  <script>
+    BlessedBumpAd.init({
+      container: 'blessedbump-ad-3',
+      minHeight: '250px'
+    });
+  </script>
+</body>
+</html>
+

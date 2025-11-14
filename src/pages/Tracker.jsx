@@ -103,21 +103,21 @@ function Tracker() {
       }
     } else {
       // Fallback to localStorage
-      const savedData = localStorage.getItem('blessedbump_pregnancy_data');
-      if (savedData) {
+    const savedData = localStorage.getItem('blessedbump_pregnancy_data');
+    if (savedData) {
         try {
-          const data = JSON.parse(savedData);
-          setPregnancyData(data);
-          if (data.dueDate) {
+      const data = JSON.parse(savedData);
+      setPregnancyData(data);
+      if (data.dueDate) {
             const dueDate = data.dueDate instanceof Date 
               ? data.dueDate 
               : new Date(data.dueDate);
             if (!isNaN(dueDate.getTime())) {
               const weekData = calculateCurrentWeek(dueDate);
-              setCurrentWeek(weekData);
-              setSelectedWeek(weekData.weeks);
-            }
-          }
+        setCurrentWeek(weekData);
+        setSelectedWeek(weekData.weeks);
+      }
+    }
         } catch (e) {
           console.error('Failed to parse pregnancy data from localStorage', e);
         }

@@ -5,7 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import './Community.css';
 
@@ -112,25 +112,75 @@ function Community() {
   const fetchTopics = useCallback(async () => {
     setTopicsLoading(true);
     setTopicsError('');
+    
+    let timeoutId;
+    let isTimedOut = false;
+
+    // Add timeout to prevent infinite loading
+    timeoutId = setTimeout(() => {
+      console.warn('Topics fetch timeout - request taking too long');
+      isTimedOut = true;
+      setTopicsLoading(false);
+      setTopicsError('Request timed out. Please check your connection and try again.');
+    }, 10000); // 10 second timeout
+
     try {
+      console.log('Fetching topics from Supabase...');
       const { data, error } = await supabase
         .from('topics')
         .select('id, slug, title, description')
         .order('title', { ascending: true });
 
+      clearTimeout(timeoutId);
+
+      if (isTimedOut) {
+        return; // Don't process if already timed out
+      }
+
       if (error) {
+        console.error('Error fetching topics:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+        });
         throw error;
       }
 
-      setTopics(data);
-      setSelectedTopicId((prev) => prev ?? data?.[0]?.id ?? null);
+      console.log('Topics fetched successfully:', data);
+
+      if (data && Array.isArray(data)) {
+        if (data.length > 0) {
+          setTopics(data);
+          setSelectedTopicId((prev) => {
+            // Only set if we don't have a previous selection or if previous is invalid
+            if (!prev || !data.find(t => t.id === prev)) {
+              return data?.[0]?.id ?? null;
+            }
+            return prev;
+          });
+        } else {
+          console.log('No topics found in database');
+          setTopics([]);
+        }
+      } else {
+        console.warn('Invalid data format received:', data);
+        setTopics([]);
+      }
     } catch (error) {
-      setTopicsError(
-        error?.message || 'Unable to load the community circles right now.',
-      );
-      setTopics([]);
+      if (!isTimedOut) {
+        clearTimeout(timeoutId);
+        console.error('Failed to fetch topics:', error);
+        const errorMessage = error?.message || 'Unable to load the community circles right now.';
+        setTopicsError(errorMessage);
+        setTopics([]);
+      }
     } finally {
-      setTopicsLoading(false);
+      if (!isTimedOut) {
+        clearTimeout(timeoutId);
+        setTopicsLoading(false);
+      }
     }
   }, []);
 
@@ -468,10 +518,45 @@ function Community() {
             <p>Select a focus area to explore questions and reflections.</p>
           </div>
 
-          {topicsLoading ? (
-            <div className="community-placeholder">Loading circles…</div>
+          {!isSupabaseConfigured() ? (
+            <div className="community-error">
+              Supabase is not configured. Please check your environment variables.
+            </div>
+          ) : topicsLoading ? (
+            <div className="community-placeholder">
+              <div>Loading circles…</div>
+              <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', opacity: 0.7 }}>
+                This may take a moment
+              </div>
+            </div>
           ) : topicsError ? (
-            <div className="community-error">{topicsError}</div>
+            <div className="community-error">
+              <div>{topicsError}</div>
+              <button
+                type="button"
+                onClick={fetchTopics}
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.6rem 1.2rem',
+                  background: 'rgba(124, 114, 255, 0.2)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#2c2057',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '0.9rem',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(124, 114, 255, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(124, 114, 255, 0.2)';
+                }}
+              >
+                Retry
+              </button>
+            </div>
           ) : topics.length === 0 ? (
             <div className="community-placeholder">
               No circles yet. Add topics in Supabase to get started.
@@ -479,6 +564,7 @@ function Community() {
           ) : (
             <ul className="community-topic-list">
               {topics.map((topic) => {
+                if (!topic || !topic.id) return null;
                 const meta = topicMeta[topic.slug] || {};
                 const isActive = topic.id === selectedTopicId;
                 return (
@@ -496,7 +582,7 @@ function Community() {
                       <div className="topic-main">
                         <span className="topic-icon">{meta.icon || '🌟'}</span>
                         <div>
-                          <span className="topic-name">{topic.title}</span>
+                          <span className="topic-name">{topic.title || 'Untitled'}</span>
                           <span className="topic-blurb">
                             {topic.description || meta.blurb || ''}
                           </span>

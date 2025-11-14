@@ -71,11 +71,42 @@ export function AuthProvider({ children }) {
         return null;
       }
 
-      const { data, error } = await supabase
+      // Add timeout for profile fetch
+      const profilePromise = supabase
         .from('profiles')
         .select('*')
         .eq('user_id', authUser.id)
         .maybeSingle();
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 8000)
+      );
+
+      let profileResult;
+      try {
+        profileResult = await Promise.race([profilePromise, timeoutPromise]);
+      } catch (timeoutError) {
+        if (timeoutError.message === 'Profile fetch timeout') {
+          console.warn('Profile fetch timed out, using default profile');
+          // Create a default profile from auth user metadata
+          const defaultProfile = {
+            user_id: authUser.id,
+            email: authUser.email,
+            display_name:
+              authUser.user_metadata?.full_name ||
+              authUser.email?.split('@')[0] ||
+              'Glow Mama',
+            phone: authUser.user_metadata?.phone_number || null,
+          };
+          setProfile(defaultProfile);
+          const payload = buildUserPayload({ profile: defaultProfile, authUser });
+          setUser(payload);
+          return payload;
+        }
+        throw timeoutError;
+      }
+
+      const { data, error } = profileResult;
 
       if (error && error.code !== 'PGRST116') {
         throw error;
@@ -119,22 +150,42 @@ export function AuthProvider({ children }) {
     let mounted = true;
 
     const init = async () => {
-      // Set a timeout to prevent hanging
+      // Set a longer timeout to prevent hanging, but don't clear session on timeout
+      // This allows for slow network connections
       const timeoutId = setTimeout(() => {
         if (!mounted) return;
         // eslint-disable-next-line no-console
-        console.warn('Session initialization timeout - proceeding without session');
-        setSession(null);
-        setProfile(null);
-        setUser(null);
+        console.warn('Session initialization taking longer than expected, but continuing...');
+        // Don't clear session on timeout - just stop loading
+        // The session might still be valid, just taking time to verify
         setLoading(false);
-      }, 10000); // Increased to 10 seconds for slower connections
+      }, 20000); // Increased to 20 seconds
 
       try {
+        // First, try to get the session from Supabase with timeout
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Session fetch timeout')), 10000)
+        );
+
+        let sessionResult;
+        try {
+          sessionResult = await Promise.race([sessionPromise, timeoutPromise]);
+        } catch (timeoutError) {
+          if (timeoutError.message === 'Session fetch timeout') {
+            console.warn('Session fetch timed out, will rely on auth state listener');
+            // Return null session - the auth state listener will handle restoration
+            // This prevents the app from hanging while still allowing session recovery
+            sessionResult = { data: { session: null }, error: null };
+          } else {
+            throw timeoutError;
+          }
+        }
+
         const {
           data: { session: initialSession },
           error: sessionError,
-        } = await supabase.auth.getSession();
+        } = sessionResult;
 
         if (!mounted) {
           clearTimeout(timeoutId);
@@ -146,27 +197,41 @@ export function AuthProvider({ children }) {
         if (sessionError) {
           // eslint-disable-next-line no-console
           console.error('Session error', sessionError);
-          // Don't clear session on error - might be a temporary network issue
-          // Only clear if it's a clear authentication error
-          if (sessionError.message?.includes('JWT') || sessionError.message?.includes('expired')) {
+          // Only clear session on clear authentication errors (JWT expired, invalid token)
+          // For network errors, keep existing state as session might still be valid
+          if (
+            sessionError.message?.includes('JWT') ||
+            sessionError.message?.includes('expired') ||
+            sessionError.message?.includes('invalid') ||
+            sessionError.message?.includes('token')
+          ) {
             setSession(null);
             setProfile(null);
             setUser(null);
           }
-          setLoading(false);
+          // For other errors (network, etc.), don't clear - session might still be valid
+    setLoading(false);
           return;
         }
 
         if (initialSession) {
+          // Session found - set it and sync profile
           setSession(initialSession);
           if (initialSession.user) {
-            await syncProfile(initialSession.user);
+            try {
+              await syncProfile(initialSession.user);
+            } catch (profileError) {
+              // eslint-disable-next-line no-console
+              console.error('Error syncing profile', profileError);
+              // Even if profile sync fails, keep the session
+              // Profile can be synced later
+            }
           } else {
             setProfile(null);
             setUser(null);
           }
         } else {
-          // No session found
+          // No session found - clear state
           setSession(null);
           setProfile(null);
           setUser(null);
@@ -180,11 +245,14 @@ export function AuthProvider({ children }) {
         // eslint-disable-next-line no-console
         console.error('Failed to initialize auth session', error);
         // Don't clear state on network errors - might be temporary
+        // Supabase stores session in localStorage and will restore it automatically
         if (error.message?.includes('network') || error.message?.includes('fetch')) {
-          // Network error - keep existing state if any
+          // Network error - don't clear state, let Supabase's auth state listener handle restoration
           // eslint-disable-next-line no-console
-          console.warn('Network error during session init, keeping existing state');
+          console.warn('Network error during session init, session may be restored by auth state listener');
+          // Don't clear state - Supabase will restore from localStorage via auth state change
         } else {
+          // Only clear on non-network errors (actual auth errors)
           setSession(null);
           setProfile(null);
           setUser(null);
@@ -205,17 +273,43 @@ export function AuthProvider({ children }) {
         // eslint-disable-next-line no-console
         console.log('Auth state changed:', event, nextSession ? 'Session exists' : 'No session');
         
-        setSession(nextSession);
-        if (nextSession?.user) {
-          await syncProfile(nextSession.user);
-        } else {
-          // Only clear on explicit sign out, not on token refresh failures or initial load
-          if (event === 'SIGNED_OUT') {
+        // Handle different auth events
+        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          // Session is available or refreshed - update state
+          setSession(nextSession);
+          if (nextSession?.user) {
+            try {
+              await syncProfile(nextSession.user);
+            } catch (profileError) {
+              // eslint-disable-next-line no-console
+              console.error('Error syncing profile on auth state change', profileError);
+              // Keep session even if profile sync fails
+            }
+          } else {
             setProfile(null);
             setUser(null);
           }
-          // For TOKEN_REFRESHED with null session, keep existing state
-          // as it might be a temporary refresh issue
+        } else if (event === 'SIGNED_OUT') {
+          // Explicit sign out - clear everything
+          setSession(null);
+          setProfile(null);
+          setUser(null);
+        } else {
+          // For other events, update session if available
+          setSession(nextSession);
+          if (nextSession?.user) {
+            try {
+              await syncProfile(nextSession.user);
+            } catch (profileError) {
+              // eslint-disable-next-line no-console
+              console.error('Error syncing profile', profileError);
+            }
+          } else if (event !== 'TOKEN_REFRESHED') {
+            // Only clear if it's not a token refresh (token refresh might temporarily return null)
+            // For other events with no session, clear state
+            setProfile(null);
+            setUser(null);
+          }
         }
       },
     );
@@ -306,7 +400,7 @@ export function AuthProvider({ children }) {
     
     // Clear all BlessedBump related data
     try {
-      localStorage.removeItem('blessedbump_pregnancy_data');
+    localStorage.removeItem('blessedbump_pregnancy_data');
       
       // Clear all Supabase-related localStorage keys
       const keysToRemove = [];
@@ -357,8 +451,14 @@ export function AuthProvider({ children }) {
         throw new Error('No authenticated user to update.');
       }
 
+      // Verify session is still valid before updating
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (!currentSession || !currentSession.user) {
+        throw new Error('Session expired. Please log in again.');
+      }
+
       const payload = {
-        user_id: session.user.id,
+        user_id: currentSession.user.id,
         ...updates,
         updated_at: new Date().toISOString(),
       };
@@ -370,11 +470,14 @@ export function AuthProvider({ children }) {
         .single();
 
       if (error) {
+        // Don't clear session on database errors - might be RLS or network issue
+        // Only throw the error, let the caller handle it
         throw error;
       }
 
+      // Only update state if update was successful
       setProfile(data);
-      setUser(buildUserPayload({ profile: data, authUser: session.user }));
+      setUser(buildUserPayload({ profile: data, authUser: currentSession.user }));
 
       return data;
     },

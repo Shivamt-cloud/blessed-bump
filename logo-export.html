@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlessedBump Logo Export</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #FFEFF7 0%, #FFD6E9 50%, #F9B9D2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    
+    .export-container {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .logo-wrapper {
+      display: inline-block;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(255, 159, 184, 0.3);
+    }
+    
+    .logo-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .blessed-bump-logo {
+      transition: transform 0.3s ease;
+    }
+    
+    .logo-aura {
+      filter: drop-shadow(0 3px 3px rgba(242, 139, 179, 0.25));
+      animation: glow-pulse 5s ease-in-out infinite;
+    }
+    
+    .logo-halo {
+      opacity: 0.9;
+      mix-blend-mode: screen;
+    }
+    
+    .bump-highlight {
+      opacity: 0.7;
+      animation: shimmer 6s ease-in-out infinite;
+    }
+    
+    .logo-sparkles path {
+      animation: sparkle-twinkle 4s ease-in-out infinite;
+    }
+    
+    .logo-sparkles path:nth-child(2) {
+      animation-delay: 1.2s;
+    }
+    
+    .logo-sparkles path:nth-child(3) {
+      animation-delay: 2.3s;
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
+    
+    .heart {
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+    
+    @keyframes baby-bob {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-2px);
+      }
+    }
+    
+    .baby-head,
+    .baby-body {
+      animation: baby-bob 3s ease-in-out infinite;
+      animation-delay: 0.5s;
+    }
+    
+    .baby-smile,
+    .baby-eye {
+      animation: baby-bob 3s ease-in-out infinite;
+      animation-delay: 0.5s;
+    }
+    
+    @keyframes breathe {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+    
+    .bump {
+      animation: breathe 4s ease-in-out infinite;
+      transform-origin: center;
+    }
+    
+    .mother-face {
+      animation: breathe 4s ease-in-out infinite;
+      transform-origin: center;
+      animation-delay: 0.2s;
+    }
+    
+    @keyframes arm-sway {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      25% {
+        transform: rotate(-3deg);
+      }
+      75% {
+        transform: rotate(3deg);
+      }
+    }
+    
+    .mother-arm-left {
+      animation: arm-sway 5s ease-in-out infinite;
+      transform-origin: 15px 25px;
+    }
+    
+    .mother-arm-right {
+      animation: arm-sway 5s ease-in-out infinite;
+      transform-origin: 85px 25px;
+      animation-delay: 0.5s;
+    }
+    
+    @keyframes glow-pulse {
+      0%, 100% {
+        opacity: 0.8;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes shimmer {
+      0%, 100% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 0.9;
+      }
+    }
+    
+    @keyframes sparkle-twinkle {
+      0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+    
+    .instructions {
+      margin-top: 30px;
+      color: #666;
+      font-size: 14px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .instructions h3 {
+      color: #FF6B9D;
+      margin-bottom: 10px;
+    }
+    
+    .instructions ol {
+      text-align: left;
+      margin-top: 10px;
+    }
+    
+    .instructions li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="export-container">
+    <div class="logo-wrapper">
+      <div class="logo-container">
+        <svg
+          width="200"
+          height="200"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+          class="blessed-bump-logo"
+        >
+          <defs>
+            <radialGradient id="auraGradient" cx="50%" cy="50%" r="70%">
+              <stop offset="0%" stopColor="#FFEFF7" />
+              <stop offset="60%" stopColor="#FFD6E9" />
+              <stop offset="100%" stopColor="#F9B9D2" />
+            </radialGradient>
+            <radialGradient id="haloGradient" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+              <stop offset="70%" stopColor="#FFE6F0" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#FFC5DD" stopOpacity="0.2" />
+            </radialGradient>
+            <radialGradient id="bumpGradient" cx="50%" cy="60%" r="55%">
+              <stop offset="0%" stopColor="#FFD9E8" />
+              <stop offset="55%" stopColor="#FF9DBF" />
+              <stop offset="100%" stopColor="#FF78A8" />
+            </radialGradient>
+            <radialGradient id="babyHeadGradient" cx="45%" cy="45%" r="70%">
+              <stop offset="0%" stopColor="#FFEDE2" />
+              <stop offset="100%" stopColor="#FFC9AE" />
+            </radialGradient>
+            <radialGradient id="babyBodyGradient" cx="50%" cy="60%" r="75%">
+              <stop offset="0%" stopColor="#FFF3E8" />
+              <stop offset="100%" stopColor="#FFD8BF" />
+            </radialGradient>
+            <radialGradient id="motherSkinGradient" cx="50%" cy="35%" r="80%">
+              <stop offset="0%" stopColor="#FFE6EF" />
+              <stop offset="100%" stopColor="#FF9FBD" />
+            </radialGradient>
+            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FF8AAF" />
+              <stop offset="100%" stopColor="#FF4D88" />
+            </linearGradient>
+            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#F28BB3" floodOpacity="0.25" />
+            </filter>
+          </defs>
+
+          <circle cx="50" cy="50" r="46" fill="url(#auraGradient)" class="logo-aura" />
+          <circle cx="50" cy="50" r="38" fill="url(#haloGradient)" class="logo-halo" />
+          <ellipse cx="50" cy="65" rx="35" ry="25" fill="url(#bumpGradient)" stroke="#FF91B0" strokeWidth="2.2" class="bump" />
+          <path d="M 30 55 Q 50 40 70 55" stroke="rgba(255,255,255,0.6)" strokeWidth="2.5" strokeLinecap="round" fill="none" class="bump-highlight" />
+          <circle cx="45" cy="50" r="12" fill="url(#babyHeadGradient)" stroke="#F9B9A2" strokeWidth="1.4" class="baby-head" />
+          <ellipse cx="45" cy="65" rx="10" ry="15" fill="url(#babyBodyGradient)" stroke="#FFCFB2" strokeWidth="1.2" class="baby-body" />
+          <circle cx="41" cy="48" r="1.5" fill="#333" class="baby-eye" />
+          <circle cx="49" cy="48" r="1.5" fill="#333" class="baby-eye" />
+          <path d="M 41 52 Q 45 55 49 52" fill="none" stroke="#333" strokeWidth="1.5" strokeLinecap="round" class="baby-smile" />
+          <circle cx="50" cy="25" r="12" fill="url(#motherSkinGradient)" stroke="#FF91B0" strokeWidth="2" class="mother-face" />
+          <circle cx="46" cy="23" r="1" fill="#666" class="mother-eye" />
+          <circle cx="54" cy="23" r="1" fill="#666" class="mother-eye" />
+          <path d="M 46 28 Q 50 31 54 28" fill="none" stroke="#666" strokeWidth="1.5" strokeLinecap="round" class="mother-smile" />
+          <path d="M 38 20 Q 50 8 62 20 Q 58 17 50 17 Q 42 17 38 20 Z" fill="#FF8EB9" opacity="0.75" class="mother-hair" />
+          <path d="M 15 25 Q 10 40 25 55" fill="none" stroke="#FFB6C6" strokeWidth="4" strokeLinecap="round" class="mother-arm-left" />
+          <path d="M 85 25 Q 90 40 75 55" fill="none" stroke="#FFB6C6" strokeWidth="4" strokeLinecap="round" class="mother-arm-right" />
+          <path d="M 58 55 L 60 52 L 62 55 L 64 57 Q 64 59 62 61 Q 60 63 58 65 Q 56 63 54 61 Q 52 59 52 57 Z" fill="url(#heartGradient)" class="heart" />
+          <g class="logo-sparkles">
+            <path d="M 25 35 L 27 40 L 32 42 L 27 44 L 25 49 L 23 44 L 18 42 L 23 40 Z" fill="rgba(255,255,255,0.85)" />
+            <path d="M 82 40 L 83.5 43.5 L 87 45 L 83.5 46.5 L 82 50 L 80.5 46.5 L 77 45 L 80.5 43.5 Z" fill="rgba(255,255,255,0.8)" />
+            <path d="M 32 78 L 33 81 L 36 82 L 33 83 L 32 86 L 31 83 L 28 82 L 31 81 Z" fill="rgba(255,255,255,0.75)" />
+          </g>
+        </svg>
+      </div>
+    </div>
+    
+    <div class="instructions">
+      <h3>📹 How to Export as GIF:</h3>
+      <ol>
+        <li><strong>Screen Record</strong>: Use QuickTime (Mac) or Xbox Game Bar (Windows) to record this page for 5-10 seconds</li>
+        <li><strong>Convert to GIF</strong>: Upload the video to <a href="https://ezgif.com/video-to-gif" target="_blank">EZGIF.com</a></li>
+        <li><strong>Settings</strong>:
+          <ul>
+            <li>Duration: 3-5 seconds</li>
+            <li>Size: 200x200px</li>
+            <li>Frame Rate: 15-30 fps</li>
+            <li>Loop: Yes</li>
+          </ul>
+        </li>
+        <li><strong>Download</strong>: Save your GIF and use in advertisements!</li>
+      </ol>
+      <p style="margin-top: 15px; color: #FF6B9D; font-weight: bold;">
+        💡 Tip: You can also use browser extensions like "Screen Recorder" for easier capture!
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+

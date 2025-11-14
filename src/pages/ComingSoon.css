@@ -1,0 +1,496 @@
+.coming-soon-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFEFF7 0%, #FFD6E9 50%, #F9B9D2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.coming-soon-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 159, 184, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(124, 114, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.coming-soon-container {
+  max-width: 1200px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+.coming-soon-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.coming-soon-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF6B9D 0%, #7C72FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 1rem 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.coming-soon-subtitle {
+  font-size: 1.25rem;
+  color: #666;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Main Content */
+.coming-soon-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* Countdown Section */
+.countdown-section {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  box-shadow: 0 8px 32px rgba(255, 159, 184, 0.2);
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.countdown-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FF6B9D;
+  margin: 0 0 0.5rem;
+}
+
+.countdown-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 2rem;
+}
+
+.countdown-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.countdown-item {
+  background: linear-gradient(135deg, #FF9FB8 0%, #7C72FF 100%);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  min-width: 90px;
+  box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.countdown-item:nth-child(1) { animation-delay: 0s; }
+.countdown-item:nth-child(3) { animation-delay: 0.2s; }
+.countdown-item:nth-child(5) { animation-delay: 0.4s; }
+.countdown-item:nth-child(7) { animation-delay: 0.6s; }
+
+.countdown-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.countdown-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.countdown-separator {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FF6B9D;
+  margin: 0 0.5rem;
+}
+
+.launch-date {
+  font-size: 1.1rem;
+  color: #666;
+  font-weight: 600;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(255, 159, 184, 0.3);
+}
+
+/* About Section */
+.about-section {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  box-shadow: 0 8px 32px rgba(255, 159, 184, 0.2);
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FF6B9D;
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #555;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Features Section */
+.features-section {
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(255, 159, 184, 0.15);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(255, 159, 184, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.feature-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FF6B9D;
+  margin: 0 0 0.75rem;
+}
+
+.feature-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+/* Benefits Section */
+.benefits-section {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  box-shadow: 0 8px 32px rgba(255, 159, 184, 0.2);
+  animation: fadeInUp 0.8s ease-out 0.8s both;
+}
+
+.benefits-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.benefit-check {
+  font-size: 1.5rem;
+  color: #7C72FF;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Newsletter Section */
+.newsletter-section {
+  background: linear-gradient(135deg, #FF9FB8 0%, #7C72FF 100%);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: white;
+  box-shadow: 0 8px 32px rgba(255, 107, 157, 0.4);
+  animation: fadeInUp 0.8s ease-out 1s both;
+}
+
+.newsletter-section .section-title {
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.newsletter-description {
+  font-size: 1.1rem;
+  margin: 0 0 2rem;
+  opacity: 0.95;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.newsletter-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.newsletter-button {
+  padding: 1rem 2.5rem;
+  background: white;
+  color: #FF6B9D;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.newsletter-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Social Section */
+.social-section {
+  text-align: center;
+  animation: fadeInUp 0.8s ease-out 1.2s both;
+}
+
+.social-description {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 1.5rem;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  text-decoration: none;
+  color: #555;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 159, 184, 0.2);
+}
+
+.social-link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(255, 159, 184, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.social-link span {
+  font-size: 1.25rem;
+}
+
+/* Footer */
+.coming-soon-footer {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(255, 159, 184, 0.3);
+  color: #666;
+  animation: fadeIn 1s ease-out 1.4s both;
+}
+
+.footer-tagline {
+  font-size: 1rem;
+  color: #999;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .coming-soon-title {
+    font-size: 2.5rem;
+  }
+
+  .countdown-timer {
+    gap: 0.5rem;
+  }
+
+  .countdown-item {
+    min-width: 70px;
+    padding: 1rem 0.75rem;
+  }
+
+  .countdown-number {
+    font-size: 2rem;
+  }
+
+  .countdown-separator {
+    font-size: 1.5rem;
+    margin: 0 0.25rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-list {
+    grid-template-columns: 1fr;
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+  }
+
+  .newsletter-input,
+  .newsletter-button {
+    width: 100%;
+  }
+
+  .social-links {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .coming-soon-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .coming-soon-title {
+    font-size: 2rem;
+  }
+
+  .countdown-item {
+    min-width: 60px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .countdown-number {
+    font-size: 1.75rem;
+  }
+
+  .countdown-label {
+    font-size: 0.75rem;
+  }
+
+  .countdown-section,
+  .about-section,
+  .benefits-section,
+  .newsletter-section {
+    padding: 2rem 1.5rem;
+  }
+}
+

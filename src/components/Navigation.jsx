@@ -7,8 +7,18 @@ import './Navigation.css';
 function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout, openAuthModal } = useAuth();
+  const { user, loading, logout, openAuthModal } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  // Debug: Log user state changes
+  React.useEffect(() => {
+    console.log('Navigation - User state changed:', { 
+      hasUser: !!user, 
+      userName: user?.name, 
+      userEmail: user?.email,
+      loading 
+    });
+  }, [user, loading]);
 
   const handleLogout = async () => {
     try {
@@ -102,27 +112,36 @@ function Navigation() {
           </span>
         </button>
 
-        <div className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
-              onClick={(event) => handleNavClick(event, item.path)}
-            >
-              <span className="nav-icon" aria-hidden>
-                {item.icon}
-              </span>
-              <div className="nav-text">
-                <span className="nav-label">{item.label}</span>
-                <span className="nav-caption">{item.caption}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <div className={`mobile-menu-wrapper ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          <div className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`nav-link ${isActive(item.path) ? 'active' : ''}`}
+                onClick={(event) => handleNavClick(event, item.path)}
+              >
+                <span className="nav-icon" aria-hidden>
+                  {item.icon}
+                </span>
+                <div className="nav-text">
+                  <span className="nav-label">{item.label}</span>
+                  <span className="nav-caption">{item.caption}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
 
-        <div className={`nav-user ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          {user ? (
+          <div className={`nav-user ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          {loading ? (
+            <div className="nav-loading" style={{ 
+              padding: '0.5rem 1rem',
+              fontSize: '0.85rem',
+              color: 'rgba(44, 32, 87, 0.6)'
+            }}>
+              Loading...
+            </div>
+          ) : user ? (
             <>
               <button
                 type="button"
@@ -139,11 +158,11 @@ function Navigation() {
                   </span>
                 ) : (
                   <span className="user-avatar placeholder" aria-hidden>
-                    {(user.name || 'M').charAt(0).toUpperCase()}
+                    {(user.name || user.email || 'M').charAt(0).toUpperCase()}
                   </span>
                 )}
                 <span className="user-name-text">
-                  {user.name ? `Hi, ${user.name}!` : 'Your profile'}
+                  {user.name ? `Hi, ${user.name}!` : user.email ? `Hi, ${user.email.split('@')[0]}!` : 'Your profile'}
                 </span>
               </button>
               <button
@@ -168,6 +187,7 @@ function Navigation() {
               Login / Join
             </button>
           )}
+          </div>
         </div>
       </div>
     </nav>

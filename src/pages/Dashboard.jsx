@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { calculateCurrentWeek, getBabySize, getTrimester, getWeeklyMilestone } from '../utils/pregnancyCalculator';
 import BabyExpress from '../components/BabyExpress';
+import ExerciseCalendar from '../components/ExerciseCalendar';
+import DailyCheckIn from '../components/DailyCheckIn';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -193,32 +195,6 @@ function Dashboard() {
   const wellnessTip =
     wellnessTips[currentWeek ? currentWeek.weeks % wellnessTips.length : 0];
 
-  const checkInMetrics = [
-    {
-      label: 'Energy',
-      icon: '⚡️',
-      level:
-        ['Gentle', 'Steady', 'Bright', 'Peaceful'][
-          currentWeek ? currentWeek.days % 4 : 0
-        ],
-      percent: 65 + ((currentWeek?.days || 0) % 4) * 8,
-    },
-    {
-      label: 'Movement',
-      icon: '🚶‍♀️',
-      level: `${movementSessions} of ${movementGoal} sessions`,
-      percent: Math.min(100, Math.round((movementSessions / movementGoal) * 100)),
-    },
-    {
-      label: 'Cravings',
-      icon: '🍓',
-      level:
-        ['Sweet berries', 'Crunchy veggies', 'Comfort soup', 'Citrus splash'][
-          currentWeek ? currentWeek.weeks % 4 : 0
-        ],
-      percent: 50 + ((currentWeek?.weeks || 0) % 5) * 9,
-    },
-  ];
 
   const focusActions = [
     {
@@ -449,7 +425,11 @@ function Dashboard() {
             </div>
 
             {journeyMetrics.map((metric) => (
-              <div className="insight-card metric" key={metric.label}>
+              <div 
+                className="insight-card metric" 
+                key={metric.label}
+                title={`${metric.label}: ${metric.detail} (${metric.percent}% of goal)`}
+              >
                 <div
                   className="metric-ring"
                   style={{ '--progress': `${metric.percent}%` }}
@@ -469,8 +449,11 @@ function Dashboard() {
         {/* Pocket Spark */}
         <div className="card focus-card">
           <div className="focus-header">
-            <h3>Pocket Spark</h3>
-            <p>A tiny mission to make today shimmer just a bit brighter</p>
+            <div>
+              <h3>Pocket Spark</h3>
+              <p>A tiny mission to make today shimmer just a bit brighter</p>
+            </div>
+            <span className="spark-icon" title="Quick actions to brighten your day">✨</span>
           </div>
 
           <Link to={featuredAction.to} className="featured-action">
@@ -501,40 +484,28 @@ function Dashboard() {
 
         {/* HeartSync */}
         <div className="card baby-you-card">
-          <div className="baby-you-left">
-            <div className="affirmation-header">
-              <span className="affirmation-icon">💖</span>
-              <div>
-                <h3>HeartSync</h3>
-                <p className="affirmation-subtitle">Whispers between you and your little glowbug</p>
-              </div>
-            </div>
-            <p className="affirmation-text">{affirmation}</p>
-            <div className="wellness-tip">
-              <p className="wellness-tip-label">Today's Wellness Tip</p>
-              <p className="wellness-tip-text">{wellnessTip}</p>
+          <div className="affirmation-header">
+            <span className="affirmation-icon">💖</span>
+            <div>
+              <h3>HeartSync</h3>
+              <p className="affirmation-subtitle">Whispers between you and your little glowbug</p>
             </div>
           </div>
-          <div className="baby-you-right">
-            <h4>Today's Check-in</h4>
-            <div className="check-in-grid">
-              {checkInMetrics.map((item) => (
-                <div className="check-in-card" key={item.label}>
-                  <div className="check-in-header">
-                    <span className="check-in-icon">{item.icon}</span>
-                    <span className="check-in-label">{item.label}</span>
-                  </div>
-                  <p className="check-in-level">{item.level}</p>
-                  <div className="check-in-meter">
-                    <div
-                      className="check-in-meter-fill"
-                      style={{ width: `${Math.min(item.percent, 100)}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+          <p className="affirmation-text">{affirmation}</p>
+          <div className="wellness-tip">
+            <p className="wellness-tip-label">Today's Wellness Tip</p>
+            <p className="wellness-tip-text">{wellnessTip}</p>
           </div>
+        </div>
+
+        {/* Today's Check-in - Interactive Section */}
+        <div className="card">
+          <DailyCheckIn user={user} />
+        </div>
+
+        {/* Exercise Calendar */}
+        <div className="card exercise-calendar-wrapper">
+          <ExerciseCalendar currentWeek={currentWeek} />
         </div>
 
         <div className="card nourish-card">

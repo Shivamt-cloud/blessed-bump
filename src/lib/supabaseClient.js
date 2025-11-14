@@ -51,10 +51,24 @@ const customStorage = {
 export const supabase = createClient(safeUrl, safeKey, {
   auth: {
     storage: typeof window !== 'undefined' ? customStorage : undefined,
-    autoRefreshToken: true,
-    persistSession: true,
+    autoRefreshToken: true, // Automatically refreshes access token before expiration (1 hour)
+    persistSession: true, // Session persists in localStorage
     detectSessionInUrl: true,
     flowType: 'pkce',
+    // Note: Access token expires in 1 hour, refresh token expires in 30 days (default)
+    // With autoRefreshToken: true, users stay logged in for up to 30 days of inactivity
+  },
+  db: {
+    schema: 'public',
+  },
+  global: {
+    headers: {
+      'x-client-info': 'blessedbump-web',
+    },
+  },
+  // Add timeout configuration for API requests
+  realtime: {
+    timeout: 20000, // 20 seconds for realtime connections
   },
 });
 
