@@ -68,7 +68,7 @@ export const supabase = createClient(safeUrl, safeKey, {
   },
   // Add timeout configuration for API requests
   realtime: {
-    timeout: 20000, // 20 seconds for realtime connections
+    timeout: 10000, // 10 seconds for realtime connections (reduced for faster response)
   },
 });
 

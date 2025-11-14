@@ -64,14 +64,17 @@ export function AuthProvider({ children }) {
   });
 
   const syncProfile = useCallback(
-    async (authUser) => {
+    async (authUser, retryCount = 0) => {
       if (!authUser) {
         setProfile(null);
         setUser(null);
         return null;
       }
 
-      // Add timeout for profile fetch
+      const MAX_RETRIES = 2;
+      const TIMEOUT_MS = 5000; // Reduced from 8000ms to 5000ms
+
+      // Add timeout for profile fetch with retry logic
       const profilePromise = supabase
         .from('profiles')
         .select('*')
@@ -79,7 +82,7 @@ export function AuthProvider({ children }) {
         .maybeSingle();
 
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 8000)
+        setTimeout(() => reject(new Error('Profile fetch timeout')), TIMEOUT_MS)
       );
 
       let profileResult;
@@ -87,7 +90,15 @@ export function AuthProvider({ children }) {
         profileResult = await Promise.race([profilePromise, timeoutPromise]);
       } catch (timeoutError) {
         if (timeoutError.message === 'Profile fetch timeout') {
-          console.warn('Profile fetch timed out, using default profile');
+          // Retry if we haven't exceeded max retries
+          if (retryCount < MAX_RETRIES) {
+            console.warn(`Profile fetch timed out, retrying (${retryCount + 1}/${MAX_RETRIES})...`);
+            // Wait a bit before retrying (exponential backoff)
+            await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+            return syncProfile(authUser, retryCount + 1);
+          }
+          
+          console.warn('Profile fetch timed out after retries, using default profile');
           // Create a default profile from auth user metadata
           const defaultProfile = {
             user_id: authUser.id,
@@ -109,6 +120,12 @@ export function AuthProvider({ children }) {
       const { data, error } = profileResult;
 
       if (error && error.code !== 'PGRST116') {
+        // Retry on non-404 errors
+        if (retryCount < MAX_RETRIES && !error.message?.includes('JWT') && !error.message?.includes('expired')) {
+          console.warn(`Profile fetch error, retrying (${retryCount + 1}/${MAX_RETRIES})...`, error);
+          await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+          return syncProfile(authUser, retryCount + 1);
+        }
         throw error;
       }
 
@@ -125,13 +142,19 @@ export function AuthProvider({ children }) {
           phone: authUser.user_metadata?.phone_number || null,
         };
 
+        // Use upsert instead of insert to handle race conditions
         const { data: inserted, error: insertError } = await supabase
           .from('profiles')
-          .insert(defaultProfile)
+          .upsert(defaultProfile, { onConflict: 'user_id' })
           .select()
           .single();
 
         if (insertError) {
+          // If insert fails, try to fetch again (might have been created by another request)
+          if (retryCount < MAX_RETRIES) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            return syncProfile(authUser, retryCount + 1);
+          }
           throw insertError;
         }
         profileData = inserted;
@@ -150,8 +173,8 @@ export function AuthProvider({ children }) {
     let mounted = true;
 
     const init = async () => {
-      // Set a longer timeout to prevent hanging, but don't clear session on timeout
-      // This allows for slow network connections
+      // Set a timeout to prevent hanging, but don't clear session on timeout
+      // This allows for slow network connections (reduced from 20s to 10s)
       const timeoutId = setTimeout(() => {
         if (!mounted) return;
         // eslint-disable-next-line no-console
@@ -159,13 +182,13 @@ export function AuthProvider({ children }) {
         // Don't clear session on timeout - just stop loading
         // The session might still be valid, just taking time to verify
         setLoading(false);
-      }, 20000); // Increased to 20 seconds
+      }, 10000); // Reduced to 10 seconds for faster initial load
 
       try {
-        // First, try to get the session from Supabase with timeout
+        // First, try to get the session from Supabase with timeout (reduced from 10s to 5s)
         const sessionPromise = supabase.auth.getSession();
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Session fetch timeout')), 10000)
+          setTimeout(() => reject(new Error('Session fetch timeout')), 5000)
         );
 
         let sessionResult;
@@ -337,8 +360,21 @@ export function AuthProvider({ children }) {
         throw new Error('No authentication response received.');
       }
 
+      // Set session immediately for faster UI response
+      if (data.session) {
+        setSession(data.session);
+      }
+
+      // Sync profile in background (non-blocking)
       if (data.session?.user) {
-        await syncProfile(data.session.user);
+        // Don't await - let it sync in background for faster login
+        syncProfile(data.session.user).catch((profileError) => {
+          console.warn('Profile sync in background failed, will retry:', profileError);
+          // Retry after a short delay
+          setTimeout(() => {
+            syncProfile(data.session.user).catch(console.error);
+          }, 2000);
+        });
       }
 
       return data;
@@ -371,8 +407,21 @@ export function AuthProvider({ children }) {
         throw new Error('No authentication response received.');
       }
 
+      // Set session immediately for faster UI response
+      if (data.session) {
+        setSession(data.session);
+      }
+
+      // Sync profile in background (non-blocking)
       if (data.session?.user) {
-        await syncProfile(data.session.user);
+        // Don't await - let it sync in background for faster signup
+        syncProfile(data.session.user).catch((profileError) => {
+          console.warn('Profile sync in background failed, will retry:', profileError);
+          // Retry after a short delay
+          setTimeout(() => {
+            syncProfile(data.session.user).catch(console.error);
+          }, 2000);
+        });
       }
 
       return data;
@@ -446,42 +495,107 @@ export function AuthProvider({ children }) {
   }, [session, syncProfile]);
 
   const updateUser = useCallback(
-    async (updates) => {
+    async (updates, retryCount = 0) => {
       if (!session?.user) {
         throw new Error('No authenticated user to update.');
       }
 
-      // Verify session is still valid before updating
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      if (!currentSession || !currentSession.user) {
-        throw new Error('Session expired. Please log in again.');
-      }
+      const MAX_RETRIES = 2;
+      const TIMEOUT_MS = 5000;
 
-      const payload = {
-        user_id: currentSession.user.id,
-        ...updates,
-        updated_at: new Date().toISOString(),
-      };
+      try {
+        // Verify session is still valid before updating (with timeout)
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Session check timeout')), 3000)
+        );
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .upsert(payload, { onConflict: 'user_id' })
-        .select()
-        .single();
+        let currentSession;
+        try {
+          const sessionResult = await Promise.race([sessionPromise, timeoutPromise]);
+          currentSession = sessionResult.data?.session;
+        } catch (timeoutError) {
+          if (timeoutError.message === 'Session check timeout') {
+            // Use existing session if timeout
+            currentSession = session;
+          } else {
+            throw timeoutError;
+          }
+        }
 
-      if (error) {
-        // Don't clear session on database errors - might be RLS or network issue
-        // Only throw the error, let the caller handle it
+        if (!currentSession || !currentSession.user) {
+          throw new Error('Session expired. Please log in again.');
+        }
+
+        const payload = {
+          user_id: currentSession.user.id,
+          ...updates,
+          updated_at: new Date().toISOString(),
+        };
+
+        // Optimistically update local state first
+        const optimisticProfile = { ...profile, ...payload };
+        setProfile(optimisticProfile);
+        setUser(buildUserPayload({ profile: optimisticProfile, authUser: currentSession.user }));
+
+        // Then sync to database with timeout and retry
+        const updatePromise = supabase
+          .from('profiles')
+          .upsert(payload, { onConflict: 'user_id' })
+          .select()
+          .single();
+
+        const updateTimeout = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Update timeout')), TIMEOUT_MS)
+        );
+
+        let result;
+        try {
+          result = await Promise.race([updatePromise, updateTimeout]);
+        } catch (timeoutError) {
+          if (timeoutError.message === 'Update timeout' && retryCount < MAX_RETRIES) {
+            console.warn(`Update timed out, retrying (${retryCount + 1}/${MAX_RETRIES})...`);
+            await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+            return updateUser(updates, retryCount + 1);
+          }
+          throw timeoutError;
+        }
+
+        const { data, error } = result;
+
+        if (error) {
+          // Revert optimistic update on error
+          if (profile) {
+            setProfile(profile);
+            setUser(buildUserPayload({ profile, authUser: currentSession.user }));
+          }
+          
+          // Retry on non-auth errors
+          if (retryCount < MAX_RETRIES && !error.message?.includes('JWT') && !error.message?.includes('expired')) {
+            console.warn(`Update error, retrying (${retryCount + 1}/${MAX_RETRIES})...`, error);
+            await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+            return updateUser(updates, retryCount + 1);
+          }
+          
+          // Don't clear session on database errors - might be RLS or network issue
+          throw error;
+        }
+
+        // Update state with confirmed data
+        setProfile(data);
+        setUser(buildUserPayload({ profile: data, authUser: currentSession.user }));
+
+        return data;
+      } catch (error) {
+        // Revert optimistic update on error
+        if (profile && retryCount >= MAX_RETRIES) {
+          setProfile(profile);
+          setUser(buildUserPayload({ profile, authUser: session.user }));
+        }
         throw error;
       }
-
-      // Only update state if update was successful
-      setProfile(data);
-      setUser(buildUserPayload({ profile: data, authUser: currentSession.user }));
-
-      return data;
     },
-    [session],
+    [session, profile],
   );
 
   const updateFertilityLog = useCallback(
