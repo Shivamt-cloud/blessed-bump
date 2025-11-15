@@ -2,6 +2,8 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
   padding: 2rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dashboard-header {
@@ -29,6 +31,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card {
@@ -36,6 +40,8 @@
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .main-card {
@@ -1024,12 +1030,13 @@
 
   .insights-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
   }
 
   .insights-countdown {
     align-self: stretch;
-    text-align: left;
+    text-align: center;
   }
 }
 
@@ -1057,7 +1064,7 @@
   }
 
   .dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 1.25rem;
     width: 100%;
     max-width: 100%;
@@ -1239,7 +1246,8 @@
   .focus-card,
   .check-in-section,
   .nourish-card,
-  .baby-you-card {
+  .baby-you-card,
+  .baby-express-card {
     width: 100%;
     box-sizing: border-box;
   }
@@ -1627,6 +1635,7 @@
   }
 
   .growth-details {
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.4rem;
   }
 
