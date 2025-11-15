@@ -28,8 +28,8 @@
 .dashboard-grid {
   max-width: 1400px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
   width: 100%;
   box-sizing: border-box;
@@ -45,11 +45,11 @@
 }
 
 .main-card {
-  grid-column: 1 / -1;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .main-card::after {
@@ -1064,14 +1064,12 @@
   }
 
   .dashboard-grid {
-    grid-template-columns: 1fr !important;
     gap: 1.25rem;
     width: 100%;
     max-width: 100%;
   }
 
   .main-card {
-    grid-column: 1;
     width: 100%;
     box-sizing: border-box;
   }
