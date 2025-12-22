@@ -96,7 +96,8 @@ function Contact() {
               <div className="social-contact">
                 <a href="https://facebook.com/blessedbump" target="_blank" rel="noopener noreferrer">Facebook</a>
                 <a href="https://instagram.com/blessedbump" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://twitter.com/blessedbump" target="_blank" rel="noopener noreferrer">Twitter</a>
+                <a href="https://twitter.com/freetoolhubcomm" target="_blank" rel="noopener noreferrer">Twitter</a>
+                <a href="https://www.linkedin.com/in/freetoolhubcommunity-freetoolhubcommunity-338202393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               </div>
             </div>
           </div>

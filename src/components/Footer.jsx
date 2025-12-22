@@ -99,13 +99,22 @@ function Footer() {
                 <span>Instagram</span>
               </a>
               <a 
-                href="https://twitter.com/blessedbump" 
+                href="https://twitter.com/freetoolhubcomm" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="Twitter"
               >
                 <span className="social-icon">🐦</span>
                 <span>Twitter</span>
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/freetoolhubcommunity-freetoolhubcommunity-338202393" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <span className="social-icon">💼</span>
+                <span>LinkedIn</span>
               </a>
               <a 
                 href="https://youtube.com/blessedbump" 

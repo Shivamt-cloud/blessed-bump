@@ -18,6 +18,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import PlaceholderPage from './pages/PlaceholderPage';
 import AuthOverlay from './components/AuthOverlay';
+import ChristmasAnimation from './components/ChristmasAnimation';
 import { useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -37,6 +38,7 @@ function App() {
     <AuthProvider>
       <Router>
           <AuthOverlay />
+          <ChristmasAnimation />
         <Routes>
           <Route path="/login" element={<Navigate to="/calculator" replace />} />
           <Route path="/signup" element={<Navigate to="/calculator" replace />} />
