@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
+# SPA fallback - redirect all routes to index.html EXCEPT existing files
+# Netlify will serve existing files (like sitemap.xml, robots.txt) directly
+# before applying this redirect rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
