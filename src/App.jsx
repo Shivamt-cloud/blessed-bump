@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navigation from './components/Navigation';
@@ -16,10 +16,10 @@ import TermsOfService from './pages/TermsOfService';
 import CookiePolicy from './pages/CookiePolicy';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Install from './pages/Install';
 import PlaceholderPage from './pages/PlaceholderPage';
 import AuthOverlay from './components/AuthOverlay';
-import ChristmasAnimation from './components/ChristmasAnimation';
-import { useAuth } from './context/AuthContext';
+import InstallPrompt from './components/InstallPrompt';
 import './App.css';
 
 function AppShell({ children }) {
@@ -32,13 +32,93 @@ function AppShell({ children }) {
   );
 }
 
+// OAuth Callback Loading Component (must be inside AuthProvider)
+function OAuthCallbackLoader() {
+  const [isOAuthCallback, setIsOAuthCallback] = useState(false);
+  const { user, session, loading } = useAuth();
+
+  useEffect(() => {
+    // Check if URL has OAuth callback parameters
+    const hash = window.location.hash;
+    const search = window.location.search;
+    if (hash.includes('access_token') || hash.includes('code=') || search.includes('code=')) {
+      setIsOAuthCallback(true);
+      
+      // Set a timeout to hide loading screen after max 10 seconds
+      // This prevents infinite loading if session fails to restore
+      const timeout = setTimeout(() => {
+        setIsOAuthCallback(false);
+      }, 10000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, []);
+
+  // Hide loading screen when user is logged in or after timeout
+  useEffect(() => {
+    if (isOAuthCallback) {
+      // If loading is complete and we have user/session, hide immediately
+      if (!loading && (user || session)) {
+        // Small delay to ensure smooth transition
+        const timer = setTimeout(() => {
+          setIsOAuthCallback(false);
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+      
+      // If loading takes too long, hide after 8 seconds to prevent infinite loading
+      const timeout = setTimeout(() => {
+        if (isOAuthCallback) {
+          setIsOAuthCallback(false);
+        }
+      }, 8000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [isOAuthCallback, loading, user, session]);
+
+  if (!isOAuthCallback) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 3000,
+      background: 'rgba(255, 255, 255, 0.95)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1.5rem'
+    }}>
+      <div style={{
+        fontSize: '3rem',
+        animation: 'pulse 2s ease-in-out infinite'
+      }}>👶</div>
+      <div style={{
+        fontSize: '1.2rem',
+        fontWeight: 600,
+        color: '#2d1b4e'
+      }}>Completing your sign in...</div>
+      <div style={{
+        fontSize: '0.9rem',
+        color: '#666',
+        textAlign: 'center',
+        maxWidth: '300px'
+      }}>Please wait while we set up your account</div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
     <AuthProvider>
+      <OAuthCallbackLoader />
       <Router>
+          <InstallPrompt />
           <AuthOverlay />
-          <ChristmasAnimation />
         <Routes>
           <Route path="/login" element={<Navigate to="/calculator" replace />} />
           <Route path="/signup" element={<Navigate to="/calculator" replace />} />
@@ -135,6 +215,14 @@ function App() {
             element={
               <AppShell>
                 <Contact />
+              </AppShell>
+            }
+          />
+          <Route
+            path="/install"
+            element={
+              <AppShell>
+                <Install />
               </AppShell>
             }
           />

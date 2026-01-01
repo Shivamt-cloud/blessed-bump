@@ -3,6 +3,7 @@
 .calculator-page {
   min-height: 100vh;
   padding: 3rem clamp(1rem, 4vw, 3rem);
+  padding-top: calc(3rem + 20px); /* Add extra top padding to account for sticky nav */
   background: radial-gradient(circle at top left, #fff4f0 0%, #fdfcff 45%, #f7ebff 100%);
 }
 

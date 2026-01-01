@@ -6,6 +6,7 @@ import {
   getTrimester,
 } from '../utils/pregnancyCalculator';
 import { useAuth } from '../context/AuthContext';
+import NotificationSettings from '../components/NotificationSettings';
 import './Profile.css';
 
 const defaultReminders = {
@@ -550,6 +551,15 @@ function Profile() {
               placeholder="Upcoming tests, questions for your provider, or anything you'd like to remember."
             />
           </div>
+        </section>
+
+        <section className="profile-card">
+          <div className="profile-card-header">
+            <h2>🔔 App Notifications</h2>
+            <p>Enable push notifications to get reminders and updates even when the app is closed.</p>
+          </div>
+          
+          <NotificationSettings />
         </section>
 
         <section className="profile-card">

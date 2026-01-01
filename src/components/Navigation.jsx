@@ -7,18 +7,48 @@ import './Navigation.css';
 function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, loading, logout, openAuthModal } = useAuth();
+  const { user, loading, logout, openAuthModal, session } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [isOAuthCallback, setIsOAuthCallback] = React.useState(false);
+
+  // Check if this is an OAuth callback (URL has access_token or code)
+  React.useEffect(() => {
+    const hash = window.location.hash;
+    const search = window.location.search;
+    if (hash.includes('access_token') || hash.includes('code=') || search.includes('code=')) {
+      setIsOAuthCallback(true);
+      // Keep showing loading state for up to 10 seconds to allow session restoration
+      const timeout = setTimeout(() => {
+        setIsOAuthCallback(false);
+      }, 10000);
+      return () => clearTimeout(timeout);
+    } else {
+      setIsOAuthCallback(false);
+    }
+  }, []);
+
+  // Hide OAuth callback state once we have a session
+  React.useEffect(() => {
+    if (isOAuthCallback && (user || session)) {
+      // Small delay to ensure smooth transition
+      const timer = setTimeout(() => {
+        setIsOAuthCallback(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOAuthCallback, user, session]);
 
   // Debug: Log user state changes
   React.useEffect(() => {
     console.log('Navigation - User state changed:', { 
       hasUser: !!user, 
+      hasSession: !!session,
       userName: user?.name, 
       userEmail: user?.email,
-      loading 
+      loading,
+      isOAuthCallback
     });
-  }, [user, loading]);
+  }, [user, session, loading, isOAuthCallback]);
 
   const handleLogout = async () => {
     try {
@@ -37,7 +67,7 @@ function Navigation() {
   };
 
   const handleLinkClick = (event, path) => {
-    if (!user && !['/calculator', '/fertility'].includes(path)) {
+    if (!user && !session && !['/calculator', '/fertility'].includes(path)) {
       event.preventDefault();
       openAuthModal('login', path);
     }
@@ -91,7 +121,7 @@ function Navigation() {
     <nav className="navigation">
       <div className="nav-container">
         <Link to="/calculator" className="nav-logo">
-          <Logo size={40} />
+          <Logo size={100} />
           <div className="logo-wordmark">
             <span className="logo-text">BlessedBump</span>
             <span className="logo-tagline">Because every pregnancy story deserves to be celebrated</span>
@@ -133,15 +163,15 @@ function Navigation() {
           </div>
 
           <div className={`nav-user ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          {loading ? (
+          {(loading || isOAuthCallback) ? (
             <div className="nav-loading" style={{ 
               padding: '0.5rem 1rem',
               fontSize: '0.85rem',
               color: 'rgba(44, 32, 87, 0.6)'
             }}>
-              Loading...
+              {isOAuthCallback ? 'Signing in...' : 'Loading...'}
             </div>
-          ) : user ? (
+          ) : (user || session) ? (
             <>
               <button
                 type="button"
@@ -152,17 +182,17 @@ function Navigation() {
                 }}
                 title="Open profile"
               >
-                {user.avatar ? (
+                {user?.avatar ? (
                   <span className="user-avatar" aria-hidden>
                     <img src={user.avatar} alt={`${user.name || 'User'} avatar`} />
                   </span>
                 ) : (
                   <span className="user-avatar placeholder" aria-hidden>
-                    {(user.name || user.email || 'M').charAt(0).toUpperCase()}
+                    {(user?.name || user?.email || session?.user?.email || 'M').charAt(0).toUpperCase()}
                   </span>
                 )}
                 <span className="user-name-text">
-                  {user.name ? `Hi, ${user.name}!` : user.email ? `Hi, ${user.email.split('@')[0]}!` : 'Your profile'}
+                  {user?.name ? `Hi, ${user.name}!` : user?.email ? `Hi, ${user.email.split('@')[0]}!` : session?.user?.email ? `Hi, ${session.user.email.split('@')[0]}!` : 'Your profile'}
                 </span>
               </button>
               <button

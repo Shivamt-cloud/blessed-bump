@@ -1,0 +1,321 @@
+.install-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  padding: 2rem 1rem;
+  padding-top: calc(2rem + 20px);
+}
+
+.install-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.install-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.install-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.install-header h1 {
+  font-size: 2.5rem;
+  color: #2d1b4e;
+  margin: 0 0 1rem;
+  font-weight: 700;
+}
+
+.install-subtitle {
+  font-size: 1.2rem;
+  color: rgba(45, 27, 78, 0.7);
+  margin: 0;
+}
+
+.install-success {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.install-success h2 {
+  color: #155724;
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+}
+
+.install-success p {
+  color: #155724;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.install-benefits {
+  margin-bottom: 3rem;
+}
+
+.install-benefits h2 {
+  font-size: 2rem;
+  color: #2d1b4e;
+  margin: 0 0 2rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.benefit-card {
+  background: linear-gradient(135deg, #f8f4ff 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  border: 2px solid rgba(124, 114, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(124, 114, 255, 0.2);
+  border-color: rgba(124, 114, 255, 0.3);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+  font-size: 1.25rem;
+  color: #2d1b4e;
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+}
+
+.benefit-card p {
+  font-size: 0.95rem;
+  color: rgba(45, 27, 78, 0.7);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.install-instructions {
+  margin-bottom: 3rem;
+}
+
+.install-instructions h2 {
+  font-size: 2rem;
+  color: #2d1b4e;
+  margin: 0 0 2rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.device-instructions {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #ff6b9d;
+}
+
+.device-instructions h3 {
+  font-size: 1.5rem;
+  color: #2d1b4e;
+  margin: 0 0 1.5rem;
+  font-weight: 600;
+}
+
+.device-instructions ol {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.device-instructions li {
+  font-size: 1.1rem;
+  color: rgba(45, 27, 78, 0.8);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.device-instructions li strong {
+  color: #2d1b4e;
+  font-weight: 600;
+}
+
+.instruction-icon {
+  font-size: 1.2rem;
+  margin: 0 0.25rem;
+}
+
+.instruction-note {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(124, 114, 255, 0.1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: rgba(45, 27, 78, 0.8);
+  line-height: 1.6;
+}
+
+.install-action {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #7c72ff 0%, #ff6b9d 100%);
+  border-radius: 16px;
+}
+
+.install-page-btn {
+  padding: 1rem 2.5rem;
+  background: white;
+  color: #7c72ff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.install-page-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.install-page-btn:active {
+  transform: translateY(0);
+}
+
+.install-action-note {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.95rem;
+}
+
+.install-help {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(124, 114, 255, 0.05);
+  border-radius: 16px;
+}
+
+.install-help h3 {
+  font-size: 1.5rem;
+  color: #2d1b4e;
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.install-help p {
+  font-size: 1rem;
+  color: rgba(45, 27, 78, 0.8);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.install-help a {
+  color: #7c72ff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.install-help a:hover {
+  color: #ff6b9d;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #7c72ff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.link-button:hover {
+  color: #ff6b9d;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .install-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .install-header h1 {
+    font-size: 2rem;
+  }
+
+  .install-subtitle {
+    font-size: 1rem;
+  }
+
+  .install-benefits h2,
+  .install-instructions h2 {
+    font-size: 1.75rem;
+  }
+
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .benefit-card {
+    padding: 1.5rem;
+  }
+
+  .device-instructions {
+    padding: 1.5rem;
+  }
+
+  .device-instructions h3 {
+    font-size: 1.25rem;
+  }
+
+  .device-instructions li {
+    font-size: 1rem;
+  }
+
+  .install-action {
+    padding: 1.5rem;
+  }
+
+  .install-page-btn {
+    padding: 0.875rem 2rem;
+    font-size: 1.1rem;
+    width: 100%;
+    max-width: 300px;
+  }
+}
+

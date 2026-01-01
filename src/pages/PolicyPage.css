@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
   padding: 2rem 1rem 3rem;
+  padding-top: calc(2rem + 20px); /* Add extra top padding to account for sticky nav */
 }
 
 .policy-container {
@@ -91,6 +92,7 @@
 @media (max-width: 768px) {
   .policy-page {
     padding: 1.5rem 0.75rem 2rem;
+    padding-top: calc(1.5rem + 20px); /* Add extra top padding to account for sticky nav */
   }
 
   .policy-container {

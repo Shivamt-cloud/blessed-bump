@@ -5,6 +5,7 @@ import { calculateCurrentWeek, getBabySize, getTrimester, getWeeklyMilestone } f
 import BabyExpress from '../components/BabyExpress';
 import ExerciseCalendar from '../components/ExerciseCalendar';
 import DailyCheckIn from '../components/DailyCheckIn';
+import InstallBanner from '../components/InstallBanner';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -299,6 +300,8 @@ function Dashboard() {
       </div>
 
       <div className="dashboard-grid">
+        {/* Install Banner */}
+        <InstallBanner />
         {/* Main Card - Current Week */}
         <div className="card main-card">
           <div className="main-card-header">

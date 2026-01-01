@@ -1,19 +1,58 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 function ProtectedRoute({ children }) {
   const { user, loading, session, openAuthModal } = useAuth();
   const location = useLocation();
+  const hasCheckedAuth = useRef(false);
+  const isOAuthCallback = useRef(false);
+
+  // Check if this is an OAuth callback (URL has access_token or code)
+  useEffect(() => {
+    const hash = window.location.hash;
+    const search = window.location.search;
+    if (hash.includes('access_token') || hash.includes('code=') || search.includes('code=')) {
+      isOAuthCallback.current = true;
+      // Clear after 5 seconds (OAuth callback should complete by then)
+      setTimeout(() => {
+        isOAuthCallback.current = false;
+      }, 5000);
+    }
+  }, []);
 
   useEffect(() => {
-    // Only open modal if we're not loading and truly have no user/session
-    // Also check session in case user object hasn't populated yet
-    if (!loading && !user && !session) {
-      openAuthModal('login', location.pathname);
+    // Don't open modal if:
+    // 1. Still loading
+    // 2. User or session exists
+    // 3. This is an OAuth callback (wait for it to complete)
+    // 4. We've already checked once (prevent loops)
+    if (loading || user || session || isOAuthCallback.current) {
+      return;
+    }
+
+    // Only open modal once, and only if truly no user/session
+    if (!hasCheckedAuth.current && !user && !session) {
+      hasCheckedAuth.current = true;
+      // Small delay to ensure session restoration has time to complete
+      const timer = setTimeout(() => {
+        // Check again before opening modal (session might have been restored)
+        if (!user && !session) {
+          openAuthModal('login', location.pathname);
+        }
+      }, 500);
+      
+      return () => clearTimeout(timer);
     }
   }, [loading, user, session, location.pathname, openAuthModal]);
+
+  // Reset check flag if user/session appears
+  useEffect(() => {
+    if (user || session) {
+      hasCheckedAuth.current = false;
+    }
+  }, [user, session]);
 
   if (loading) {
     return (

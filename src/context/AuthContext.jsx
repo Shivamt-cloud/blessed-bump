@@ -185,10 +185,10 @@ export function AuthProvider({ children }) {
       }, 10000); // Reduced to 10 seconds for faster initial load
 
       try {
-        // First, try to get the session from Supabase with timeout (reduced from 10s to 5s)
+        // First, try to get the session from Supabase with longer timeout for OAuth callbacks
         const sessionPromise = supabase.auth.getSession();
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Session fetch timeout')), 5000)
+          setTimeout(() => reject(new Error('Session fetch timeout')), 8000)
         );
 
         let sessionResult;
@@ -296,6 +296,23 @@ export function AuthProvider({ children }) {
         // eslint-disable-next-line no-console
         console.log('Auth state changed:', event, nextSession ? 'Session exists' : 'No session');
         
+        // Clear OAuth callback loading state when session is established
+        if (event === 'SIGNED_IN' && nextSession) {
+          // Remove OAuth callback parameters from URL
+          if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href);
+            url.hash = '';
+            url.search = '';
+            window.history.replaceState({}, '', url.toString());
+          }
+          
+          // eslint-disable-next-line no-console
+          console.log('✅ OAuth login successful - session established:', {
+            userId: nextSession.user?.id,
+            email: nextSession.user?.email
+          });
+        }
+        
         // Handle different auth events
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           // Session is available or refreshed - update state
@@ -380,6 +397,35 @@ export function AuthProvider({ children }) {
       return data;
     },
     [syncProfile],
+  );
+
+  const loginWithGoogle = useCallback(
+    async () => {
+      // Store the current pathname so we can redirect back to it after OAuth
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
+      
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: typeof window !== 'undefined'
+            ? `${window.location.origin}${currentPath}`
+            : undefined,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      // OAuth redirects to Google, so we don't wait for response here
+      // The auth state listener will handle the session when user returns
+      return data;
+    },
+    [],
   );
 
   const signup = useCallback(
@@ -641,6 +687,7 @@ export function AuthProvider({ children }) {
       loading,
       authModal,
       login,
+      loginWithGoogle,
       signup,
       logout,
       updateUser,
@@ -655,6 +702,7 @@ export function AuthProvider({ children }) {
       closeAuthModal,
       loading,
       login,
+      loginWithGoogle,
       logout,
       openAuthModal,
       profile,

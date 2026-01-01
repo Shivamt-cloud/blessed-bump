@@ -7,6 +7,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  /* Add scroll padding to account for sticky navigation (80px min-height + padding) */
+  scroll-padding-top: 100px;
 }
 
 body {
@@ -37,6 +39,17 @@ button {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
 }
 
 /* Prevent horizontal scroll on mobile */

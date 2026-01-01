@@ -39,6 +39,15 @@
   transform: scale(1.1);
 }
 
+.blessed-bump-logo-image {
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.nav-logo:hover .blessed-bump-logo-image {
+  transform: scale(1.1);
+}
+
 /* Animation for the heart */
 @keyframes heartbeat {
   0%, 100% {

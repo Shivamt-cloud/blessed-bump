@@ -33,6 +33,7 @@ function Footer() {
                 <li><Link to="/calculator">Due-Date Oracle</Link></li>
                 <li><Link to="/fertility">Fertility Oracle</Link></li>
                 <li><Link to="/community">Village Voice</Link></li>
+                <li><Link to="/install">📱 Download App</Link></li>
               </ul>
             </div>
 
@@ -99,22 +100,13 @@ function Footer() {
                 <span>Instagram</span>
               </a>
               <a 
-                href="https://twitter.com/freetoolhubcomm" 
+                href="https://twitter.com/blessedbump" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="Twitter"
               >
                 <span className="social-icon">🐦</span>
                 <span>Twitter</span>
-              </a>
-              <a 
-                href="https://www.linkedin.com/in/freetoolhubcommunity-freetoolhubcommunity-338202393" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-              >
-                <span className="social-icon">💼</span>
-                <span>LinkedIn</span>
               </a>
               <a 
                 href="https://youtube.com/blessedbump" 

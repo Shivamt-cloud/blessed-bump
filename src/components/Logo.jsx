@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Logo.css';
 
-function Logo({ size = 40 }) {
+function Logo({ size = 40, useImage = true }) {
+  const [imageError, setImageError] = useState(false);
+
+  // Render image logo if useImage is true and no error occurred
+  // Otherwise render SVG logo (default/fallback)
   return (
     <div className="logo-container">
-      <svg
+      {useImage && !imageError ? (
+        <img
+          src="/logo.png"
+          alt="BlessedBump Logo"
+          style={{
+            width: `${size}px`,
+            height: 'auto',
+            maxHeight: `${size * 1.5}px`,
+            objectFit: 'contain'
+          }}
+          className="blessed-bump-logo-image"
+          onError={() => {
+            // If image fails to load, fall back to SVG
+            setImageError(true);
+          }}
+        />
+      ) : (
+        <svg
         width={size}
         height={size}
         viewBox="0 0 100 100"
@@ -199,6 +220,7 @@ function Logo({ size = 40 }) {
           />
         </g>
       </svg>
+      )}
     </div>
   );
 }
